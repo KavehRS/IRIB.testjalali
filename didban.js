@@ -8,7 +8,7 @@
  INPUT:     ACTIVITY, SERVICE_TYPE, CONTENT_TYPE
  ****************************************************************/
 var url = "http://192.168.143.18:8876/api/",
-    auth_token = "Bearer BFC4580A3A1B1527EA26B2C0612250D0", sys_id = "ُiribcstwb99", system_id, t;
+    auth_token = "Bearer BFC4580A3A1B1527EA26B2C0612250D0", sys_id = "ُiribcstwb99", system_id;
 var user_id, active_session, ip, session_id, ttl = 30, ttl = 30, counter = ttl;
 
 
@@ -156,8 +156,8 @@ sessionFactory = {
         session_id = session_id != null ? session_id : create_SID();
         user_agent = navigator.userAgent;
         referer = document.location.origin;
-        xReferer = document.location.origin;
-        var data = '{"sys_id": "{0}", "user_id": "{1}", "session_id": "{2}", "ip": "{3}","user_agent": "{4}", "referer": "{5}", "xReferer": "{6}"}'.format(sys_id, user_id, t, ip, user_agent, referer, xReferer)
+        xReferer = document.referer;
+        var data = '{"sys_id": "{0}", "user_id": "{1}", "session_id": "{2}", "ip": "{3}","user_agent": "{4}", "referer": "{5}", "xReferer": "{6}"}'.format(sys_id, user_id, session_id, ip, user_agent, referer, xReferer)
         var xmlhttp = new XMLHttpRequest();
         xmlhttp.open("POST", "{0}session/".format(url), true);
         xmlhttp.setRequestHeader("Content-Type", "application/json");
