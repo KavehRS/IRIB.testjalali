@@ -33,9 +33,6 @@
         if (player) {
             // send play action
             player.onplay = function () {
-                //***************
-            //   sessionFactory.init();
-                //***************
                 activityFactory.log(channel_id(), content_id, content_type_id(), service_id(), ACTIVITY.Play, player.currentTime);
             }
             // send pause action
