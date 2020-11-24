@@ -156,7 +156,8 @@ sessionFactory = {
         session_id = session_id != null ? session_id : create_SID();
         user_agent = navigator.userAgent;
         referer = document.location.origin;
-        xReferer = document.referer;
+        document.getElementById("url").textContent = document.URL;    
+        xReferer = document.URL;
         var data = '{"sys_id": "{0}", "user_id": "{1}", "session_id": "{2}", "ip": "{3}","user_agent": "{4}", "referer": "{5}", "xReferer": "{6}"}'.format(sys_id, user_id, session_id, ip, user_agent, referer, xReferer)
         var xmlhttp = new XMLHttpRequest();
         xmlhttp.open("POST", "{0}session/".format(url), true);
@@ -199,7 +200,6 @@ activityFactory = {
     log: function (session_id, channel_id, content_id, content_type_id, service_id, action_id, time_code) {
         sessionFactory.check();
         var token = getCookie('token');
-
         var data = '{"session_id": "{0}", "channel_id": "{1}", "content_id": "{2}","content_type_id": "{3}", "service_id": "{4}","action_id": "{5}", "time_code": "{6}"}'.format(
             token, channel_id, content_id, content_type_id, service_id, action_id, time_code);
 
