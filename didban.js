@@ -156,7 +156,7 @@ sessionFactory = {
         session_id = session_id != null ? session_id : create_SID();
         user_agent = navigator.userAgent;
         referer = document.location.origin;
-        document.getElementById("url").textContent = document.URL;    
+        //document.getElementById("url").textContent = document.URL;    
         xReferer = document.URL;
         var data = '{"sys_id": "{0}", "user_id": "{1}", "session_id": "{2}", "ip": "{3}","user_agent": "{4}", "referer": "{5}", "xReferer": "{6}"}'.format(sys_id, user_id, session_id, ip, user_agent, referer, xReferer)
         var xmlhttp = new XMLHttpRequest();
