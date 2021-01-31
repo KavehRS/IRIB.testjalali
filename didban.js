@@ -8,7 +8,7 @@
  INPUT:     ACTIVITY, SERVICE_TYPE, CONTENT_TYPE
  ****************************************************************/
 //"http://192.168.143.18:8876/api/"
-var url = "https://statistics.irib.ir:8876/api/",
+var url = "http://192.168.143.18:8876/api/",
     auth_token = "Bearer DE9C3CFBF147067970C4CAC7F3874247", sys_id = "ُiribcsspr99", system_id;
 var user_id, active_session, ip, session_id, ttl = 30, ttl = 30, counter = ttl;
 
