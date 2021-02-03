@@ -17,7 +17,7 @@ var user_id, active_session, ip, session_id, ttl = 30, ttl = 30, counter = ttl;
 
 
 // Nourozzadeh api
-var url = "http://192.168.200.35:8080",
+var url = "http://192.168.200.35:8080/api/",
     auth_token = "Token 2156356dfa66dfd64b60ca2992509ada", sys_id = "iribcsspr99", system_id;
 var user_id, active_session, ip, session_id, ttl = 30, ttl = 30, counter = ttl;
 
