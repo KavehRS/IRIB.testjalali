@@ -7,18 +7,20 @@
  FUNCTION:  Get Data From Cleint side and send for IRIB Analytic Server
  INPUT:     ACTIVITY, SERVICE_TYPE, CONTENT_TYPE
  ****************************************************************/
+
+/**
 //jalali api
 var url = "http://192.168.143.18:8876/api/",
     auth_token = "Bearer DE9C3CFBF147067970C4CAC7F3874247", sys_id = "ُiribcsspr99", system_id;
 var user_id, active_session, ip, session_id, ttl = 30, ttl = 30, counter = ttl;
+**/
 
-/**
 
 // Nourozzadeh api
 var url = "http://192.168.200.35:8080",
     auth_token = "Bearer DE9C3CFBF147067970C4CAC7F3874247", sys_id = "ُiribcsspr99", system_id;
 var user_id, active_session, ip, session_id, ttl = 30, ttl = 30, counter = ttl;
-**/
+
 var ACTIVITY = {Play: 1, Pause: 2, FDStart: 3, FDEnd: 4, BDStart: 5, BDEnd: 6, ContentView: 7,};
 var SERVICE_TYPE = {Live: 1, TimeShift: 2, CatchUp: 3, OnDemand: 4,};
 var CONTENT_TYPE = {Video: 1, Audio: 2, Image: 3, Text: 4,};
