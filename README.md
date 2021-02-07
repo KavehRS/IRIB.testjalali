@@ -1,1 +1,1 @@
-# testplayer2
+# player test for mr.jalali API
