@@ -1,12 +1,4 @@
-/****************************************************************
- PROGRAM:   Didban Lib
- AUTHOR:    Kaveh Rezaei Shiraz
- LOGON ID :    kavehrs
- DUE DATE:  11/14/2020
- Version : 2.0.5 for test
- FUNCTION:  Get Data From Cleint side and send for IRIB Analytic Server
- INPUT:     ACTIVITY, SERVICE_TYPE, CONTENT_TYPE
- ****************************************************************/
+
 
 
 //jalali api
