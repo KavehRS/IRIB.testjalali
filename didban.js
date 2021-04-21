@@ -1,5 +1,5 @@
 // Local variables
-var url = "http://192.168.143.18:8876/api/", url = "http://localhost:8000/api/",
+var url = "http://192.168.143.18:8876/api/",
     auth_token = "Token DE9C3CFBF147067970C4CAC7F3874247", system_id = "Developer2";
 var user_id, active_session, ip, ttl = 30, ttl = 30, counter = ttl;
 
