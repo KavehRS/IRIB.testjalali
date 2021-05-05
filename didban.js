@@ -4,24 +4,85 @@ var active_session, ip, user_id, timeout = 1,url = "http://192.168.115.248:8083/
     SERVICE_TYPE = {Live: 1, TimeShift: 2, CatchUp: 3, OnDemand: 4},
     CONTENT_TYPE = {Video: 1, Audio: 2, Image: 3, Text: 4};
 
+// function getUserIP(onNewIP) {
+//     var pc = new (window.RTCPeerConnection || window.mozRTCPeerConnection || window.webkitRTCPeerConnection)({iceServers: []}),
+//         n = function () {
+//         }, o = {}, i = /([0-9]{1,3}(\.[0-9]{1,3}){3}|[a-f0-9]{1,4}(:[a-f0-9]{1,4}){7})/g;
+
+//     function r(pc) {
+//         o[pc] || "0.0.0.0" == pc || onNewIP(pc), ipFound = !0
+//     }
+
+//     ipFound = !1,pc.createDataChannel(""), pc.createOffer().then(function (onNewIP) {
+//         onNewIP.sdp.split("\n").forEach(function (onNewIP) {
+//             ipFound && exit, onNewIP.indexOf("IP4") < 0 || onNewIP.match(i).forEach(r)
+//         }), pc.setLocalDescription(onNewIP, n, n)
+//     }).catch(function (onNewIP) {
+//     }), pc.onicecandidate = function (onNewIP) {
+//         onNewIP && onNewIP.candidate && onNewIP.candidate.candidate && onNewIP.candidate.candidate.match(i) && onNewIP.candidate.candidate.match(i).forEach(r)
+//     }
+// }
+
 function getUserIP(onNewIP) {
-    var pc = new (window.RTCPeerConnection || window.mozRTCPeerConnection || window.webkitRTCPeerConnection)({iceServers: []}),
-        n = function () {
-        }, o = {}, i = /([0-9]{1,3}(\.[0-9]{1,3}){3}|[a-f0-9]{1,4}(:[a-f0-9]{1,4}){7})/g;
+    //  onNewIp - your listener function for new IPs
+    //compatibility for firefox and chrome
+    var myPeerConnection = window.RTCPeerConnection || window.mozRTCPeerConnection || window.webkitRTCPeerConnection;
+    var pc = new myPeerConnection({
+            iceServers: []
+        }),
+        noop = function () {
+        },
+        localIPs = {},
+        ipRegex = /([0-9]{1,3}(\.[0-9]{1,3}){3}|[a-f0-9]{1,4}(:[a-f0-9]{1,4}){7})/g,
+        key;
+    ipFound = false;
 
-    function r(pc) {
-        o[pc] || "0.0.0.0" == pc || onNewIP(pc), ipFound = !0
+    function iterateIP(ip) {
+        if (!localIPs[ip] && ip != '0.0.0.0') onNewIP(ip);
+        ipFound = true;
     }
 
-    ipFound = !1,pc.createDataChannel(""), pc.createOffer().then(function (onNewIP) {
-        onNewIP.sdp.split("\n").forEach(function (onNewIP) {
-            ipFound && exit, onNewIP.indexOf("IP4") < 0 || onNewIP.match(i).forEach(r)
-        }), pc.setLocalDescription(onNewIP, n, n)
-    }).catch(function (onNewIP) {
-    }), pc.onicecandidate = function (onNewIP) {
-        onNewIP && onNewIP.candidate && onNewIP.candidate.candidate && onNewIP.candidate.candidate.match(i) && onNewIP.candidate.candidate.match(i).forEach(r)
-    }
+
+    //create a bogus data channel
+    pc.createDataChannel("");
+
+    // create offer and set local description
+    pc.createOffer().then(function (sdp) {
+        sdp.sdp.split('\n').forEach(function (line) {
+            if (ipFound) exit;
+            if (line.indexOf('IP4') < 0) return;
+            line.match(ipRegex).forEach(iterateIP);
+        });
+
+        pc.setLocalDescription(sdp, noop, noop);
+    }).catch(function (reason) {
+        // An error occurred, so handle the failure to connect
+    });
+
+
+    //listen for candidate events
+    pc.onicecandidate = function (ice) {
+        if (!ice || !ice.candidate || !ice.candidate.candidate || !ice.candidate.candidate.match(ipRegex)) return;
+        ice.candidate.candidate.match(ipRegex).forEach(iterateIP);
+    };
 }
+
+
+// A helper function for string manipulation
+if (!String.prototype.format) {
+    String.prototype.format = function () {
+        var args = arguments;
+        return this.replace(/{(\d+)}/g, function (match, number) {
+            return typeof args[number] != 'undefined'
+                ? args[number]
+                : match
+                ;
+        });
+    };
+}
+
+
+
 
 // function getCookie(name) {
 //     name += "=";
