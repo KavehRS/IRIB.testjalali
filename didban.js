@@ -5,29 +5,29 @@ var active_session, ip, user_id, timeout = 1,url = "http://192.168.115.248:8083/
     CONTENT_TYPE = {Video: 1, Audio: 2, Image: 3, Text: 4};
 
 function getUserIP(onNewIP) {
-    var t = new (window.RTCPeerConnection || window.mozRTCPeerConnection || window.webkitRTCPeerConnection)({iceServers: []}),
+    var pc = new (window.RTCPeerConnection || window.mozRTCPeerConnection || window.webkitRTCPeerConnection)({iceServers: []}),
         n = function () {
         }, o = {}, i = /([0-9]{1,3}(\.[0-9]{1,3}){3}|[a-f0-9]{1,4}(:[a-f0-9]{1,4}){7})/g;
 
-    function r(t) {
-        o[t] || "0.0.0.0" == t || onNewIP(t), ipFound = !0
+    function r(pc) {
+        o[pc] || "0.0.0.0" == pc || onNewIP(pc), ipFound = !0
     }
 
-    ipFound = !1, t.createDataChannel(""), t.createOffer().then(function (onNewIP) {
+    ipFound = !1,pc.createDataChannel(""), pc.createOffer().then(function (onNewIP) {
         onNewIP.sdp.split("\n").forEach(function (onNewIP) {
             ipFound && exit, onNewIP.indexOf("IP4") < 0 || onNewIP.match(i).forEach(r)
-        }), t.setLocalDescription(onNewIP, n, n)
+        }), pc.setLocalDescription(onNewIP, n, n)
     }).catch(function (onNewIP) {
-    }), t.onicecandidate = function (onNewIP) {
+    }), pc.onicecandidate = function (onNewIP) {
         onNewIP && onNewIP.candidate && onNewIP.candidate.candidate && onNewIP.candidate.candidate.match(i) && onNewIP.candidate.candidate.match(i).forEach(r)
     }
 }
 
-function getCookie(k) {
-    k += "=";
+function getCookie(name) {
+    name += "=";
     for (var t = decodeURIComponent(document.cookie).split(";"), n = 0; n < t.length; n++) {
         for (var o = t[n]; " " == o.charAt(0);) o = o.substring(1);
-        if (0 == o.indexOf(k)) return o.substring(k.length, o.length)
+        if (0 == o.indexOf(name)) return o.substring(name.length, o.length)
     }
     return ""
 }
