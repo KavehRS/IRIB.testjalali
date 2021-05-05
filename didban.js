@@ -32,11 +32,11 @@ function getCookie(k) {
     return ""
 }
 
-function setCookie(k, t) {
+function setCookie(key, t) {
     if (t) {
         var n = new Date;
-        n.setMinutes(n.getMinutes() + timeout), document.cookie = "{0}={1}; expires={2}".format(k, t, n.toUTCString())
-    } else document.cookie = "{0}=; expires=Thu, 01 Jan 1970 00:00:00 UTC;".format(k)
+        n.setMinutes(n.getMinutes() + timeout), document.cookie = "{0}={1}; expires={2}".format(key, t, n.toUTCString())
+    } else document.cookie = "{0}=; expires=Thu, 01 Jan 1970 00:00:00 UTC;".format(key)
 }
 
 function create_UUID() {
