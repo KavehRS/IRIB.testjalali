@@ -23,20 +23,20 @@ function getUserIP(onNewIP) {
     }
 }
 
-function getCookie(e) {
-    e += "=";
+function getCookie(k) {
+    k += "=";
     for (var t = decodeURIComponent(document.cookie).split(";"), n = 0; n < t.length; n++) {
         for (var o = t[n]; " " == o.charAt(0);) o = o.substring(1);
-        if (0 == o.indexOf(e)) return o.substring(e.length, o.length)
+        if (0 == o.indexOf(k)) return o.substring(k.length, o.length)
     }
     return ""
 }
 
-function setCookie(e, t) {
+function setCookie(k, t) {
     if (t) {
         var n = new Date;
-        n.setMinutes(n.getMinutes() + timeout), document.cookie = "{0}={1}; expires={2}".format(e, t, n.toUTCString())
-    } else document.cookie = "{0}=; expires=Thu, 01 Jan 1970 00:00:00 UTC;".format(e)
+        n.setMinutes(n.getMinutes() + timeout), document.cookie = "{0}={1}; expires={2}".format(k, t, n.toUTCString())
+    } else document.cookie = "{0}=; expires=Thu, 01 Jan 1970 00:00:00 UTC;".format(k)
 }
 
 function create_UUID() {
