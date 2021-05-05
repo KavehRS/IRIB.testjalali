@@ -25,8 +25,8 @@ function getUserIP(onNewIP) {
 
 function getCookie(name) {
     name += "=";
-    for (var t = decodeURIComponent(document.cookie).split(";"), n = 0; n < t.length; n++) {
-        for (var o = t[n]; " " == o.charAt(0);) o = o.substring(1);
+    for (var ca = decodeURIComponent(document.cookie).split(";"), n = 0; n < ca.length; n++) {
+        for (var o = ca[n]; " " == o.charAt(0);) o = o.substring(1);
         if (0 == o.indexOf(name)) return o.substring(name.length, o.length)
     }
     return ""
