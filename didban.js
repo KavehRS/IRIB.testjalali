@@ -50,12 +50,25 @@ function getCookie(name) {
 
 
 
+// function setCookie(key, value) {
+//     if (value) {
+//         var n = new Date;
+//         n.setMinutes(n.getMinutes() + timeout), document.cookie = "{0}={1}; expires={2}".format(key, value, n.toUTCString())
+//     } else document.cookie = "{0}=; expires=Thu, 01 Jan 1970 00:00:00 UTC;".format(key)
+// }
+
 function setCookie(key, value) {
-    if (value) {
-        var n = new Date;
-        n.setMinutes(n.getMinutes() + timeout), document.cookie = "{0}={1}; expires={2}".format(key, value, n.toUTCString())
-    } else document.cookie = "{0}=; expires=Thu, 01 Jan 1970 00:00:00 UTC;".format(key)
+    if (!value) {
+        // Expire cookie
+        document.cookie = "{0}=; expires=Thu, 01 Jan 1970 00:00:00 UTC;".format(key);
+        return;
+    }
+
+    var dt = new Date();
+    dt.setMinutes(dt.getMinutes() + timeout);
+    document.cookie = "{0}={1}; expires={2}".format(key, value, dt.toUTCString());
 }
+
 
 function create_UUID() {
     var e = (new Date).getTime();
