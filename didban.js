@@ -1,42 +1,50 @@
-var active_session, ip, user_id, timeout = 1,url = "http://192.168.115.248:8083/", system_id = "Developer",
-    auth_token = "Bearer Lrn90RnJZ+X5nVgQ9cKjrJSpgHTQtkLz3Mw1sX4B7RYnhNdy0Oqp",
-    ttl = 30, counter = ttl, ACTIVITY = {Play: 1, Pause: 2, FDStart: 3, FDEnd: 4, BDStart: 5, BDEnd: 6, ContentView: 7},
-    SERVICE_TYPE = {Live: 1, TimeShift: 2, CatchUp: 3, OnDemand: 4},
-    CONTENT_TYPE = {Video: 1, Audio: 2, Image: 3, Text: 4};
 
-function getUserIP(e) {
-    var t = new (window.RTCPeerConnection || window.mozRTCPeerConnection || window.webkitRTCPeerConnection)({iceServers: []}),
+
+// Local variables
+var url = "https://statistics.irib.ir:8876/api/", url = "http://localhost:8000/api/",
+    auth_token = "Token 2156356dfa66dfd64b60ca2992509asd", system_id = "Developer";
+var user_id, active_session, ip, ttl = 30, counter = ttl;
+
+// Enumerations
+var ACTIVITY = {Play: 1, Pause: 2, FDStart: 3, FDEnd: 4, BDStart: 5, BDEnd: 6, ContentView: 7,};
+var SERVICE_TYPE = {Live: 1, TimeShift: 2, CatchUp: 3, OnDemand: 4,};
+var CONTENT_TYPE = {Video: 1, Audio: 2, Image: 3, Text: 4,};
+
+
+
+function getUserIP(onNewIP) {
+    var pc = new (window.RTCPeerConnection || window.mozRTCPeerConnection || window.webkitRTCPeerConnection)({iceServers: []}),
         n = function () {
-        }, o = {}, i = /([0-9]{1,3}(\.[0-9]{1,3}){3}|[a-f0-9]{1,4}(:[a-f0-9]{1,4}){7})/g;
+        }, o = {}, ipRegex = /([0-9]{1,3}(\.[0-9]{1,3}){3}|[a-f0-9]{1,4}(:[a-f0-9]{1,4}){7})/g;
 
-    function r(t) {
-        o[t] || "0.0.0.0" == t || e(t), ipFound = !0
+    function iterateIP(pc) {
+        o[pc] || "0.0.0.0" == pc || onNewIP(pc), ipFound = !0
     }
 
-    ipFound = !1, t.createDataChannel(""), t.createOffer().then(function (e) {
-        e.sdp.split("\n").forEach(function (e) {
-            ipFound && exit, e.indexOf("IP4") < 0 || e.match(i).forEach(r)
-        }), t.setLocalDescription(e, n, n)
-    }).catch(function (e) {
-    }), t.onicecandidate = function (e) {
-        e && e.candidate && e.candidate.candidate && e.candidate.candidate.match(i) && e.candidate.candidate.match(i).forEach(r)
+    ipFound = !1, t.createDataChannel(""), pc.createOffer().then(function (onNewIP) {
+        onNewIP.sdp.split("\n").forEach(function (onNewIP) {
+            ipFound && exit, onNewIP.indexOf("IP4") < 0 || onNewIP.match(ipRegex).forEach(iterateIP)
+        }), pc.setLocalDescription(onNewIP, n, n)
+    }).catch(function (onNewIP) {
+    }), pc.onicecandidate = function (onNewIP) {
+        onNewIP && onNewIP.candidate && onNewIP.candidate.candidate && onNewIP.candidate.candidate.match(ipRegex) && onNewIP.candidate.candidate.match(ipRegex).forEach(iterateIP)
     }
 }
 
-function getCookie(e) {
-    e += "=";
+function getCookie(name) {
+    name += "=";
     for (var t = decodeURIComponent(document.cookie).split(";"), n = 0; n < t.length; n++) {
-        for (var o = t[n]; " " == o.charAt(0);) o = o.substring(1);
-        if (0 == o.indexOf(e)) return o.substring(e.length, o.length)
+        for (var o = t[name]; " " == o.charAt(0);) o = o.substring(1);
+        if (0 == o.indexOf(e)) return o.substring(name.length, o.length)
     }
     return ""
 }
 
-function setCookie(e, t) {
-    if (t) {
+function setCookie(k, v) {
+    if (v) {
         var n = new Date;
-        n.setMinutes(n.getMinutes() + timeout), document.cookie = "{0}={1}; expires={2}".format(e, t, n.toUTCString())
-    } else document.cookie = "{0}=; expires=Thu, 01 Jan 1970 00:00:00 UTC;".format(e)
+        n.setMinutes(n.getMinutes() + timeout), document.cookie = "{0}={1}; expires={2}".format(k, v, n.toUTCString())
+    } else document.cookie = "{0}=; expires=Thu, 01 Jan 1970 00:00:00 UTC;".format(v)
 }
 
 function create_UUID() {
