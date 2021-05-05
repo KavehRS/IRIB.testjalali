@@ -23,14 +23,32 @@ function getUserIP(onNewIP) {
     }
 }
 
+// function getCookie(name) {
+//     name += "=";
+//     for (var ca = decodeURIComponent(document.cookie).split(";"), n = 0; n < ca.length; n++) {
+//         for (var o = ca[n]; " " == o.charAt(0);) o = o.substring(1);
+//         if (0 == o.indexOf(name)) return o.substring(name.length, o.length)
+//     }
+//     return ""
+// }
+
 function getCookie(name) {
-    name += "=";
-    for (var ca = decodeURIComponent(document.cookie).split(";"), n = 0; n < ca.length; n++) {
-        for (var o = ca[n]; " " == o.charAt(0);) o = o.substring(1);
-        if (0 == o.indexOf(name)) return o.substring(name.length, o.length)
+    name = name + "=";
+    var decodedCookie = decodeURIComponent(document.cookie);
+    var ca = decodedCookie.split(';');
+    for (var i = 0; i < ca.length; i++) {
+        var c = ca[i];
+        while (c.charAt(0) == ' ') {
+            c = c.substring(1);
+        }
+        if (c.indexOf(name) == 0) {
+            return c.substring(name.length, c.length);
+        }
     }
     return ""
 }
+
+
 
 function setCookie(key, value) {
     if (value) {
