@@ -121,7 +121,7 @@ function getCookie(name) {
 function setCookie(key, value) {
     if (!value) {
         // Expire cookie
-        document.cookie = "{0}=; expires=Thu, 01 Jan 1970 00:00:00 UTC;".format(key);
+        document.cookie = "{0}=; expires=Thu, 01 Jan 2040 00:00:00 UTC;".format(key);
         return;
     }
 
