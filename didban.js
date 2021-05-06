@@ -118,17 +118,17 @@ function getCookie(name) {
 //     } else document.cookie = "{0}=; expires=Thu, 01 Jan 1970 00:00:00 UTC;".format(key)
 // }
 
-function setCookie(key, value) {
-    if (!value) {
-        // Expire cookie
-        document.cookie = "{0}=; expires=Thu, 01 Jan 1970 00:00:00 UTC;".format(key);
-        return;
-    }
+// function setCookie(key, value) {
+//     if (!value) {
+//         // Expire cookie
+//         document.cookie = "{0}=; expires=Thu, 01 Jan 1970 00:00:00 UTC;".format(key);
+//         return;
+//     }
 
-    var dt = new Date();
-    dt.setMinutes(dt.getMinutes() + timeout);
-    document.cookie = "{0}={1}; expires={2}".format(key, value, dt.toUTCString());
-}
+//     var dt = new Date();
+//     dt.setMinutes(dt.getMinutes() + timeout);
+//     document.cookie = "{0}={1}; expires={2}".format(key, value, dt.toUTCString());
+// }
 
 
 // function create_UUID() {
