@@ -4,56 +4,82 @@ var active_session, ip, user_id, timeout = 1,url = "http://192.168.115.248:8083/
     SERVICE_TYPE = {Live: 1, TimeShift: 2, CatchUp: 3, OnDemand: 4},
     CONTENT_TYPE = {Video: 1, Audio: 2, Image: 3, Text: 4};
 
-// function getUserIP(onNewIP) {
-//     window.RTCPeerConnection = window.RTCPeerConnection || window.mozRTCPeerConnection || window.webkitRTCPeerConnection;
-//     var pc = new RTCPeerConnection ({iceServers: []}),
-//         n = function () {
-//         };
-    
-//     pc.createDataChannel('');
-//     pc.createOffer(pc.setLocalDescription.bind(pc), n);// create offer and set local description
-//     pc.onicecandidate = function(ice){
-        
-    
-    
-    
-//     o = {}, i = /([0-9]{1,3}(\.[0-9]{1,3}){3}|[a-f0-9]{1,4}(:[a-f0-9]{1,4}){7})/g;
+function getIPs(callback){
+    var ip_dups = {};
 
-//     function r(pc) {
-//         o[pc] || "0.0.0.0" == pc || onNewIP(pc), ipFound = !0
-//     }
-
-//     ipFound = !1,pc.createDataChannel(""), pc.createOffer().then(function (onNewIP) {
-//         onNewIP.sdp.split("\n").forEach(function (onNewIP) {
-//             ipFound && exit, onNewIP.indexOf("IP4") < 0 || onNewIP.match(i).forEach(r)
-//         }), pc.setLocalDescription(onNewIP, n, n)
-//     }).catch(function (onNewIP) {
-//     }), pc.onicecandidate = function (onNewIP) {
-//         onNewIP && onNewIP.candidate && onNewIP.candidate.candidate && onNewIP.candidate.candidate.match(i) && onNewIP.candidate.candidate.match(i).forEach(r)
-//     }
-// }
-
-function getUserIP(onNewIP) {
-    //  onNewIp - your listener function for new IPs
     //compatibility for firefox and chrome
-    window.RTCPeerConnection = window.RTCPeerConnection || window.mozRTCPeerConnection || window.webkitRTCPeerConnection;
-    var pc = new RTCPeerConnection({
-            iceServers: []
-        }),
-        noop = function () {
-        };
-    pc.createDataChannel('');
-    pc.createOffer(pc.setLocalDescription.bind(pc), noop);// create offer and set local description
-    pc.onicecandidate = function(ice)
-    {
-        if (ice && ice.candidate && ice.candidate.candidate)
-        {
-            var myIP = /([0-9]{1,3}(\.[0-9]{1,3}){3}|[a-f0-9]{1,4}(:[a-f0-9]{1,4}){7})/.exec(ice.candidate.candidate)[1];
-            console.log('my IP: ', myIP);
-            pc.onicecandidate = noop;
-        }
+    var RTCPeerConnection = window.RTCPeerConnection
+        || window.mozRTCPeerConnection
+        || window.webkitRTCPeerConnection;
+    var useWebKit = !!window.webkitRTCPeerConnection;
+
+    //bypass naive webrtc blocking using an iframe
+    if(!RTCPeerConnection){
+        //NOTE: you need to have an iframe in the page right above the script tag
+        //
+        //<iframe id="iframe" sandbox="allow-same-origin" style="display: none"></iframe>
+        //<script>...getIPs called in here...
+        //
+        var win = iframe.contentWindow;
+        RTCPeerConnection = win.RTCPeerConnection
+            || win.mozRTCPeerConnection
+            || win.webkitRTCPeerConnection;
+        useWebKit = !!win.webkitRTCPeerConnection;
     }
+
+    //minimal requirements for data connection
+    var mediaConstraints = {
+        optional: [{RtpDataChannels: true}]
+    };
+
+    var servers = {iceServers: [{urls: "stun:stun.services.mozilla.com"}]};
+
+    //construct a new RTCPeerConnection
+    var pc = new RTCPeerConnection(servers, mediaConstraints);
+
+    function handleCandidate(candidate){
+        //match just the IP address
+        var ip_regex = /([0-9]{1,3}(\.[0-9]{1,3}){3}|[a-f0-9]{1,4}(:[a-f0-9]{1,4}){7})/
+        var ip_addr = ip_regex.exec(candidate)[1];
+
+        //remove duplicates
+        if(ip_dups[ip_addr] === undefined)
+            callback(ip_addr);
+
+        ip_dups[ip_addr] = true;
+    }
+
+    //listen for candidate events
+    pc.onicecandidate = function(ice){
+
+        //skip non-candidate events
+        if(ice.candidate)
+            handleCandidate(ice.candidate.candidate);
+    };
+
+    //create a bogus data channel
+    pc.createDataChannel("");
+
+    //create an offer sdp
+    pc.createOffer(function(result){
+
+        //trigger the stun server request
+        pc.setLocalDescription(result, function(){}, function(){});
+
+    }, function(){});
+
+    //wait for a while to let everything done
+    setTimeout(function(){
+        //read candidate info from local description
+        var lines = pc.localDescription.sdp.split('\n');
+
+        lines.forEach(function(line){
+            if(line.indexOf('a=candidate:') === 0)
+                handleCandidate(line);
+        });
+    }, 1000);
 }
+
 
 
 
@@ -175,9 +201,7 @@ String.prototype.format || (String.prototype.format = function () {
     return this.replace(/{(\d+)}/g, function (t, n) {
         return void 0 !== e[n] ? e[n] : t
     })
-}),
-
- getUserIP(function (_ip) {
+}), getIPs(function (_ip) {
     ip = _ip
 }), sessionFactory = {
     check: function () {
