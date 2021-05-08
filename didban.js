@@ -178,9 +178,9 @@ String.prototype.format || (String.prototype.format = function () {
 }), sessionFactory = {
     check: function () {
         var e = getCookie("token");
-        var p = getCookie("token1");
+//         var p = getCookie("token1");
         return e ? (active_session = e, console.log("Session is already opened. Token {0}".format(e))) : sessionFactory.init(user_id), !0
-        return p ? (active_session = p, console.log("Session is already opened. Token {0}".format(p))) : sessionFactory.init(session_id), !0
+//         return p ? (active_session = p, console.log("Session is already opened. Token {0}".format(p))) : sessionFactory.init(session_id), !0
     } , init: function (e) {
         if (ip) {
             var m = getCookie("token1");
@@ -198,19 +198,19 @@ String.prototype.format || (String.prototype.format = function () {
             setCookie("token", t)
             setCookie("token1", m)
         } else setTimeout(function () {
-            0 != counter-- ? sessionFactory.init(user_id) : counter = ttl
+            0 != counter-- ? sessionFactory.init(session_id) : counter = ttl
         }, 1e3)
     }, expire: function () {
-        return setCookie("token", null), user_id = null, !0
+        return setCookie("token1", null), session_id = null, !0
     }
 }, activityFactory = {
     log: function (e, t, n, o, i, r) {
         sessionFactory.check();
-        var a = getCookie("token"),
+        var a = getCookie("token1"),
             s = '{"session_id": "{0}", "channel_id": "{1}", "content_id": "{2}","content_type_id": "{3}", "service_id": "{4}","action_id": "{5}", "time_code": "{6}"}'.format(a, e, t, n, o, i, r),
             c = new XMLHttpRequest;
         return c.open("POST", "{0}event/".format(url), !0), c.setRequestHeader("Content-Type", "application/json"), c.setRequestHeader("Authorization", auth_token), c.onreadystatechange = function () {
-            4 == this.readyState && 201 == this.status ? (setCookie("token", a), console.log("Token {0} did activity {1}".format(a, i))) : console.log("Activity logging failed.")
+            4 == this.readyState && 201 == this.status ? (setCookie("token1", a), console.log("Token {0} did activity {1}".format(a, i))) : console.log("Activity logging failed.")
         }, c.send(s), !0
     }
 };
