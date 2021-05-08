@@ -183,7 +183,7 @@ String.prototype.format || (String.prototype.format = function () {
         if (ip) {
             var t = getCookie("token");
             if (user_id != e || !t) {
-                t = create_UUID();
+                t = create_SID();
                 user_id = null != e ? e : t, setCookie("token", t), user_agent = navigator.userAgent, referer = document.location.origin, xReferer = document.location.origin;
                 var n = '{"sys_id": "{0}", "user_id": "{1}", "session_id": "{2}", "ip": "{3}","user_agent": "{4}", "referer": "{5}", "xReferer": "{6}"}'.format(system_id, user_id, t, ip, user_agent, referer, xReferer),
                     o = new XMLHttpRequest;
