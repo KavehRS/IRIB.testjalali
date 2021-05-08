@@ -126,7 +126,7 @@ function setCookie(key, value) {
     }
 
     var dt = new Date();
-    dt.setMinutes(dt.getMinutes() + timeout);
+    dt.setHours(dt.getHoures() + timeout);
     document.cookie = "{0}={1}; expires={2}".format(key, value, dt.toUTCString());
 }
 
@@ -134,7 +134,7 @@ function create_SID() {
     var dt = new Date().getTime();
     var sid = 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function (c) {
         var r = (dt + Math.random() * 16) % 16 | 0;
-        dt = Math.floor(dt / 4);
+        dt = Math.floor(dt / 16);
         return (c == 'x' ? r : (r & 0x3 | 0x8)).toString(16);
     });
     return sid;
