@@ -224,7 +224,7 @@ String.prototype.format || (String.prototype.format = function () {
             }
             setCookie("token", t)
             setCookie("token1",m)
-//             _setCookie("token2",x)
+            _setCookie("token2",x)
         } else setTimeout(function () {
             0 != counter-- ? sessionFactory.init(user_id) : counter = ttl
         }, 1e3)
