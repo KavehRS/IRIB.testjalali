@@ -236,9 +236,9 @@ String.prototype.format || (String.prototype.format = function () {
         
         
         
-        else setTimeout(function () {
-            0 != counter-- ? sessionFactory.init(user_id) : counter = ttl
-        }, 1e3)
+//         else setTimeout(function () {
+//             0 != counter-- ? sessionFactory.init(user_id) : counter = ttl
+//         }, 1e3)
     },
     expire: function () {
         return setCookie("token", null), user_id = null, !0
