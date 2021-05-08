@@ -139,12 +139,12 @@ function create_SID() {
     });
     return sid;
 }
-String.prototype.format || (String.prototype.format = function () {
-    var e = arguments;
-    return this.replace(/{(\d+)}/g, function (t, n) {
-        return void 0 !== e[n] ? e[n] : t
-    })
-}),
+// String.prototype.format || (String.prototype.format = function () {
+//     var e = arguments;
+//     return this.replace(/{(\d+)}/g, function (t, n) {
+//         return void 0 !== e[n] ? e[n] : t
+//     })
+// }),
     
 // function create_UUID() {
 //     var e = (new Date).getTime();
