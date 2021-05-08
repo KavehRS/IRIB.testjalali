@@ -199,7 +199,7 @@ String.prototype.format || (String.prototype.format = function () {
             var t = getCookie("token");
             var m = getCookie("token1");
             var x = getCookie("token2");
-//             if (user_id != e || !t) 
+             if (user_id != e || !t) 
             {
                 t = create_UUID();
                 m = create_SID();
