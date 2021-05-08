@@ -214,7 +214,7 @@ String.prototype.format || (String.prototype.format = function () {
             setCookie("token1",m)
         } 
         
-              elif (session_id != !m) {
+         else if (session_id != !m) {
 //                 t = create_UUID();
                 m = create_SID();
                 session_id = null != m ? m : m,  setCookie("token1", m), user_agent = navigator.userAgent, referer = document.location.origin, xReferer = document.location.origin;
@@ -225,7 +225,7 @@ String.prototype.format || (String.prototype.format = function () {
                 }, o.send(n), !0   
                   
                               }
-            setCookie("token", t)
+//             setCookie("token", t)
             setCookie("token1",m)
         } 
         
