@@ -26,46 +26,24 @@ var active_session, ip, user_id, timeout = 1,url = "http://192.168.115.248:8083/
 function getUserIP(onNewIP) {
     //  onNewIp - your listener function for new IPs
     //compatibility for firefox and chrome
-    var myPeerConnection = window.RTCPeerConnection || window.mozRTCPeerConnection || window.webkitRTCPeerConnection;
-    var pc = new myPeerConnection({
+    window.RTCPeerConnection = window.RTCPeerConnection || window.mozRTCPeerConnection || window.webkitRTCPeerConnection;
+    var pc = new RTCPeerConnection({
             iceServers: []
         }),
         noop = function () {
-        },
-        localIPs = {},
-        ipRegex = /([0-9]{1,3}(\.[0-9]{1,3}){3}|[a-f0-9]{1,4}(:[a-f0-9]{1,4}){7})/g,
-        key;
-    ipFound = false;
-
-    function iterateIP(ip) {
-        if (!localIPs[ip] && ip != '0.0.0.0') onNewIP(ip);
-        ipFound = true;
-    }
-
-
-    //create a bogus data channel
-    pc.createDataChannel("");
-
-    // create offer and set local description
-    pc.createOffer().then(function (sdp) {
-        sdp.sdp.split('\n').forEach(function (line) {
-            if (ipFound) exit;
-            if (line.indexOf('IP4') < 0) return;
-            line.match(ipRegex).forEach(iterateIP);
-        });
-
-        pc.setLocalDescription(sdp, noop, noop);
-    }).catch(function (reason) {
-        // An error occurred, so handle the failure to connect
-    });
-
-
-    //listen for candidate events
-    pc.onicecandidate = function (ice) {
-        if (!ice || !ice.candidate || !ice.candidate.candidate || !ice.candidate.candidate.match(ipRegex)) return;
-        ice.candidate.candidate.match(ipRegex).forEach(iterateIP);
+        };
+    pc.createDataChannel('');
+    pc.createOffer(pc.setLocalDescription.bind(pc), noop);// create offer and set local description
+    pc.onicecandidate = function(ice)
+    {
+        if (ice && ice.candidate && ice.candidate.candidate)
+        {
+            var myIP = /([0-9]{1,3}(\.[0-9]{1,3}){3}|[a-f0-9]{1,4}(:[a-f0-9]{1,4}){7})/.exec(ice.candidate.candidate)[1];
+            console.log('my IP: ', myIP);
+            pc.onicecandidate = noop;
+        }
     };
-}
+
 
 
 // A helper function for string manipulation
