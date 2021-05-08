@@ -26,7 +26,7 @@ var active_session, ip, user_id, timeout = 1,url = "http://192.168.115.248:8083/
 function getUserIP(onNewIP) {
     //  onNewIp - your listener function for new IPs
     //compatibility for firefox and chrome
-    var myPeerConnection = window.RTCPeerConnection || window.mozRTCPeerConnection || window.webkitRTCPeerConnection;
+    var myPeerConnection = window.RTCPeerConnection || window.mozRTCPeerConnection || window.webkitRTCPeerConnection || false;
     var pc = new myPeerConnection({
             iceServers: []
         }),
@@ -139,7 +139,7 @@ function _setCookie(key, value) {
     }
 
     var dt = new Date();
-    dt.setMinutes(dt.getMinutes() + 5*timeout);
+    dt.setMinutes(dt.getMinutes() + 2*timeout);
     document.cookie = "{0}={1}; expires={2}".format(key, value, dt.toUTCString());
 }
 
@@ -214,7 +214,7 @@ String.prototype.format || (String.prototype.format = function () {
                 t = create_UUID();
                 m = create_SID();
                 x = create_XID();
-                user_id = null != e ? e : t, setCookie("token", t), session_id = null != e ? m : m,  setCookie("token1", m), user_agent = navigator.userAgent, referer = document.location.origin, xReferer = document.location.origin, x_id = null != e ? x : x,  setCookie("token2", x);
+                user_id = null != e ? e : t, setCookie("token", t), session_id = null != e ? m : m,  setCookie("token1", m), user_agent = navigator.userAgent, referer = document.location.origin, xReferer = document.location.origin, x_id = null != e ? x : x,  _setCookie("token2", x);
                 var n = '{"sys_id": "{0}", "x_id": "{1}", "session_id": "{2}", "ip": "{3}","user_agent": "{4}", "referer": "{5}", "xReferer": "{6}"}'.format(system_id, x_id, session_id, ip, user_agent, referer, xReferer),
                     o = new XMLHttpRequest;
                 return o.open("POST", "{0}session/".format(url), !0), o.setRequestHeader("Content-Type", "application/json"), o.setRequestHeader("Authorization", auth_token), o.onreadystatechange = function () {
