@@ -23,63 +23,155 @@ var active_session, ip, user_id, timeout = 1,url = "http://192.168.115.248:8083/
 //     }
 // }
 
-function getUserIP(onNewIP) {
-    //  onNewIp - your listener function for new IPs
-    //compatibility for firefox and chrome
-    var myPeerConnection = window.RTCPeerConnection || window.mozRTCPeerConnection || window.webkitRTCPeerConnection;
-    var pc = new myPeerConnection({
-            iceServers: []
-        }),
-        noop = function () {
-        },
-        localIPs = {},
-        ipRegex = /([0-9]{1,3}(\.[0-9]{1,3}){3}|[a-f0-9]{1,4}(:[a-f0-9]{1,4}){7})/g,
-        key;
-    ipFound = false;
+// function getUserIP(onNewIP) {
+//     //  onNewIp - your listener function for new IPs
+//     //compatibility for firefox and chrome
+//     var myPeerConnection = window.RTCPeerConnection || window.mozRTCPeerConnection || window.webkitRTCPeerConnection;
+//     var pc = new myPeerConnection({
+//             iceServers: []
+//         }),
+//         noop = function () {
+//         },
+//         localIPs = {},
+//         ipRegex = /([0-9]{1,3}(\.[0-9]{1,3}){3}|[a-f0-9]{1,4}(:[a-f0-9]{1,4}){7})/g,
+//         key;
+//     ipFound = false;
+//
+//     function iterateIP(ip) {
+//         if (!localIPs[ip] && ip != '0.0.0.0') onNewIP(ip);
+//         ipFound = true;
+//     }
+//
+//
+//     //create a bogus data channel
+//     pc.createDataChannel("");
+//
+//     // create offer and set local description
+//     pc.createOffer().then(function (sdp) {
+//         sdp.sdp.split('\n').forEach(function (line) {
+//             if (ipFound) exit;
+//             if (line.indexOf('IP4') < 0) return;
+//             line.match(ipRegex).forEach(iterateIP);
+//         });
+//
+//         pc.setLocalDescription(sdp, noop, noop);
+//     }).catch(function (reason) {
+//         // An error occurred, so handle the failure to connect
+//     });
+//
+//
+//     //listen for candidate events
+//     pc.onicecandidate = function (ice) {
+//         if (!ice || !ice.candidate || !ice.candidate.candidate || !ice.candidate.candidate.match(ipRegex)) return;
+//         ice.candidate.candidate.match(ipRegex).forEach(iterateIP);
+//     };
+// }
 
-    function iterateIP(ip) {
-        if (!localIPs[ip] && ip != '0.0.0.0') onNewIP(ip);
-        ipFound = true;
-    }
 
 
-    //create a bogus data channel
-    pc.createDataChannel("");
+/////////////////////////
+function getIPs(callback) {
+  var ip_dups = {};
+  
+  //compatibility for firefox and chrome
+  var RTCPeerConnection = window.RTCPeerConnection
+    || window.mozRTCPeerConnection
+    || window.webkitRTCPeerConnection;
+  var useWebKit = !!window.webkitRTCPeerConnection;
 
-    // create offer and set local description
-    pc.createOffer().then(function (sdp) {
-        sdp.sdp.split('\n').forEach(function (line) {
-            if (ipFound) exit;
-            if (line.indexOf('IP4') < 0) return;
-            line.match(ipRegex).forEach(iterateIP);
-        });
+  //bypass naive webrtc blocking using an iframe
+  if(!RTCPeerConnection){
+    //NOTE: you need to have an iframe in the page right above the script tag
+    //
+    //<iframe id="iframe" sandbox="allow-same-origin" style="display: none"></iframe>
+    //<script>...getIPs called in here...
+    //
+    var win = iframe.contentWindow;
+    RTCPeerConnection = win.RTCPeerConnection
+      || win.mozRTCPeerConnection
+      || win.webkitRTCPeerConnection;
+    useWebKit = !!win.webkitRTCPeerConnection;
+  }
 
-        pc.setLocalDescription(sdp, noop, noop);
-    }).catch(function (reason) {
-        // An error occurred, so handle the failure to connect
+  //minimal requirements for data connection
+  var mediaConstraints = {
+    optional: [{RtpDataChannels: true}]
+  };
+
+  //firefox already has a default stun server in about:config
+  //    media.peerconnection.default_iceservers =
+  //    [{"url": "stun:stun.services.mozilla.com"}]
+  var servers = undefined;
+
+  //add same stun server for chrome
+  if(useWebKit)
+    servers = {iceServers: [{urls: "stun:stun.services.mozilla.com"}]};
+
+  //construct a new RTCPeerConnection
+  var pc = new RTCPeerConnection(servers, mediaConstraints);
+
+  function handleCandidate(candidate){
+    //match just the IP address
+    var ip_regex = /([0-9]{1,3}(\.[0-9]{1,3}){3})/
+    var ip_addr = ip_regex.exec(candidate)[1];
+
+    //remove duplicates
+    if(ip_dups[ip_addr] === undefined)
+        callback(ip_addr);
+
+    ip_dups[ip_addr] = true;
+  }
+
+  //listen for candidate events
+  pc.onicecandidate = function(ice){
+    //skip non-candidate events
+    if(ice.candidate)
+      handleCandidate(ice.candidate.candidate);
+  };
+
+  //create a bogus data channel
+  pc.createDataChannel("");
+
+  //create an offer sdp
+  pc.createOffer(function(result){
+    //trigger the stun server request
+    pc.setLocalDescription(result, function(){}, function(){});
+  }, function(){});
+
+  //wait for a while to let everything done
+  setTimeout(function(){
+    //read candidate info from local description
+    var lines = pc.localDescription.sdp.split('\n');
+    lines.forEach(function(line){
+      if(line.indexOf('a=candidate:') === 0) {
+        handleCandidate(line);
+      }
     });
-
-
-    //listen for candidate events
-    pc.onicecandidate = function (ice) {
-        if (!ice || !ice.candidate || !ice.candidate.candidate || !ice.candidate.candidate.match(ipRegex)) return;
-        ice.candidate.candidate.match(ipRegex).forEach(iterateIP);
-    };
+  }, 1000);
 }
 
+getIPs(function(ip){
+  //local IPs
+  if (ip.match(/^(192\.168\.|169\.254\.|10\.|172\.(1[6-9]|2\d|3[01]))/)) {
+    console.log(ip);
+  }
+});
+
+
+/////////////////////////
 
 // A helper function for string manipulation
-if (!String.prototype.format) {
-    String.prototype.format = function () {
-        var args = arguments;
-        return this.replace(/{(\d+)}/g, function (match, number) {
-            return typeof args[number] != 'undefined'
-                ? args[number]
-                : match
-                ;
-        });
-    };
-}
+// if (!String.prototype.format) {
+//     String.prototype.format = function () {
+//         var args = arguments;
+//         return this.replace(/{(\d+)}/g, function (match, number) {
+//             return typeof args[number] != 'undefined'
+//                 ? args[number]
+//                 : match
+//                 ;
+//         });
+//     };
+// }
 
 
 
@@ -188,7 +280,7 @@ String.prototype.format || (String.prototype.format = function () {
     })
 }),
 
- getUserIP(function (e) {
+ getIPs(function (e) {
     ip = e
 }), sessionFactory = {
     check: function () {
