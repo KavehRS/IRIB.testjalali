@@ -4,45 +4,56 @@ var active_session, ip, user_id, timeout = 1,url = "http://192.168.115.248:8083/
     SERVICE_TYPE = {Live: 1, TimeShift: 2, CatchUp: 3, OnDemand: 4},
     CONTENT_TYPE = {Video: 1, Audio: 2, Image: 3, Text: 4};
 
+// function getUserIP(onNewIP) {
+//     window.RTCPeerConnection = window.RTCPeerConnection || window.mozRTCPeerConnection || window.webkitRTCPeerConnection;
+//     var pc = new RTCPeerConnection ({iceServers: []}),
+//         n = function () {
+//         };
+    
+//     pc.createDataChannel('');
+//     pc.createOffer(pc.setLocalDescription.bind(pc), n);// create offer and set local description
+//     pc.onicecandidate = function(ice){
+        
+    
+    
+    
+//     o = {}, i = /([0-9]{1,3}(\.[0-9]{1,3}){3}|[a-f0-9]{1,4}(:[a-f0-9]{1,4}){7})/g;
+
+//     function r(pc) {
+//         o[pc] || "0.0.0.0" == pc || onNewIP(pc), ipFound = !0
+//     }
+
+//     ipFound = !1,pc.createDataChannel(""), pc.createOffer().then(function (onNewIP) {
+//         onNewIP.sdp.split("\n").forEach(function (onNewIP) {
+//             ipFound && exit, onNewIP.indexOf("IP4") < 0 || onNewIP.match(i).forEach(r)
+//         }), pc.setLocalDescription(onNewIP, n, n)
+//     }).catch(function (onNewIP) {
+//     }), pc.onicecandidate = function (onNewIP) {
+//         onNewIP && onNewIP.candidate && onNewIP.candidate.candidate && onNewIP.candidate.candidate.match(i) && onNewIP.candidate.candidate.match(i).forEach(r)
+//     }
+// }
+
 function getUserIP(onNewIP) {
-    var pc = new (window.RTCPeerConnection || window.mozRTCPeerConnection || window.webkitRTCPeerConnection)({iceServers: []}),
-        n = function () {
-        }, o = {}, i = /([0-9]{1,3}(\.[0-9]{1,3}){3}|[a-f0-9]{1,4}(:[a-f0-9]{1,4}){7})/g;
-
-    function r(pc) {
-        o[pc] || "0.0.0.0" == pc || onNewIP(pc), ipFound = !0
-    }
-
-    ipFound = !1,pc.createDataChannel(""), pc.createOffer().then(function (onNewIP) {
-        onNewIP.sdp.split("\n").forEach(function (onNewIP) {
-            ipFound && exit, onNewIP.indexOf("IP4") < 0 || onNewIP.match(i).forEach(r)
-        }), pc.setLocalDescription(onNewIP, n, n)
-    }).catch(function (onNewIP) {
-    }), pc.onicecandidate = function (onNewIP) {
-        onNewIP && onNewIP.candidate && onNewIP.candidate.candidate && onNewIP.candidate.candidate.match(i) && onNewIP.candidate.candidate.match(i).forEach(r)
+    //  onNewIp - your listener function for new IPs
+    //compatibility for firefox and chrome
+    window.RTCPeerConnection = window.RTCPeerConnection || window.mozRTCPeerConnection || window.webkitRTCPeerConnection;
+    var pc = new RTCPeerConnection({
+            iceServers: []
+        }),
+        noop = function () {
+        };
+    pc.createDataChannel('');
+    pc.createOffer(pc.setLocalDescription.bind(pc), noop);// create offer and set local description
+    pc.onicecandidate = function(ice)
+    {
+        if (ice && ice.candidate && ice.candidate.candidate)
+        {
+            var myIP = /([0-9]{1,3}(\.[0-9]{1,3}){3}|[a-f0-9]{1,4}(:[a-f0-9]{1,4}){7})/.exec(ice.candidate.candidate)[1];
+            console.log('my IP: ', myIP);
+            pc.onicecandidate = noop;
+        }
     }
 }
-
-// function getUserIP(onNewIP) {
-//     //  onNewIp - your listener function for new IPs
-//     //compatibility for firefox and chrome
-//     window.RTCPeerConnection = window.RTCPeerConnection || window.mozRTCPeerConnection || window.webkitRTCPeerConnection;
-//     var pc = new RTCPeerConnection({
-//             iceServers: []
-//         }),
-//         noop = function () {
-//         };
-//     pc.createDataChannel('');
-//     pc.createOffer(pc.setLocalDescription.bind(pc), noop);// create offer and set local description
-//     pc.onicecandidate = function(ice)
-//     {
-//         if (ice && ice.candidate && ice.candidate.candidate)
-//         {
-//             var myIP = /([0-9]{1,3}(\.[0-9]{1,3}){3}|[a-f0-9]{1,4}(:[a-f0-9]{1,4}){7})/.exec(ice.candidate.candidate)[1];
-//             console.log('my IP: ', myIP);
-//             pc.onicecandidate = noop;
-//         }
-//     }
 
 
 
