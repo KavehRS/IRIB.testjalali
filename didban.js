@@ -40,7 +40,11 @@ function getIPs(callback){
     function handleCandidate(candidate){
         //match just the IP address
         var ip_regex = /([0-9]{1,3}(\.[0-9]{1,3}){3}|[a-f0-9]{1,4}(:[a-f0-9]{1,4}){7})/
-        var ip_addr = ip_regex.exec(candidate)[1];
+        if (ip_regex.exec(candidate) != null) {
+            var ip_addr = ip_regex.exec(candidate)[1];
+        }
+        
+        
 
         //remove duplicates
         if(ip_dups[ip_addr] === undefined)
