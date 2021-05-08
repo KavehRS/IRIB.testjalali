@@ -6,23 +6,13 @@ var active_session, ip, user_id, timeout = 1,url = "http://192.168.115.248:8083/
 
 
 
-function getUserIP(onNewIP) {
-    
-    window.RTCPeerConnection = window.RTCPeerConnection || window.mozRTCPeerConnection || window.webkitRTCPeerConnection;//compatibility for Firefox and chrome
-    var pc = new RTCPeerConnection({iceServers:[]}), noop = function(){};      
-    pc.createDataChannel('');//create a bogus data channel
-    pc.createOffer(pc.setLocalDescription.bind(pc), noop);// create offer and set local description
-    pc.onicecandidate = function(ice)
-    
-    {
-        if (ice && ice.candidate && ice.candidate.candidate)
-            
-            {
-                var ip = /([0-9]{1,3}(\.[0-9]{1,3}){3}|[a-f0-9]{1,4}(:[a-f0-9]{1,4}){7})/.exec(ice.candidate.candidate)[1];
-                console.log('ip: ', ip);   
-                   pc.onicecandidate = noop;
- }
-};
+function getUserIP(e){
+	var t=new(window.RTCPeerConnection||window.mozRTCPeerConnection||window.webkitRTCPeerConnection)({iceServers:[]}),
+    n=function(){},
+    o={},
+    i=/([0-9]{1,3}(\.[0-9]{1,3}){3}|[a-f0-9]{1,4}(:[a-f0-9]{1,4}){7})/g;
+function r(t){
+    o[t]||"0.0.0.0"==t||e(t),ipFound=!0}ipFound=!1,
 
 
 
@@ -30,17 +20,17 @@ function getUserIP(onNewIP) {
 /////////////////////////
 
 // A helper function for string manipulation
-// if (!String.prototype.format) {
-//     String.prototype.format = function () {
-//         var args = arguments;
-//         return this.replace(/{(\d+)}/g, function (match, number) {
-//             return typeof args[number] != 'undefined'
-//                 ? args[number]
-//                 : match
-//                 ;
-//         });
-//     };
-// }
+if (!String.prototype.format) {
+    String.prototype.format = function () {
+        var args = arguments;
+        return this.replace(/{(\d+)}/g, function (match, number) {
+            return typeof args[number] != 'undefined'
+                ? args[number]
+                : match
+                ;
+        });
+    };
+}
 
 
 
