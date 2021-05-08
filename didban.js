@@ -183,7 +183,7 @@ String.prototype.format || (String.prototype.format = function () {
     return this.replace(/{(\d+)}/g, function (t, n) {
         return void 0 !== e[n] ? e[n] : t
     })
-}), getIPs(function (_ip) {
+}), getUserIP(function (_ip) {
     ip = _ip
 }), sessionFactory = {
     check: function () {
