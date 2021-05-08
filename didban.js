@@ -4,84 +4,62 @@ var active_session, ip, user_id, timeout = 1,url = "http://192.168.115.248:8083/
     SERVICE_TYPE = {Live: 1, TimeShift: 2, CatchUp: 3, OnDemand: 4},
     CONTENT_TYPE = {Video: 1, Audio: 2, Image: 3, Text: 4};
 
-function getIPs(callback){
-    var ip_dups = {};
-
+function getUserIP(onNewIP) {
+    //  onNewIp - your listener function for new IPs
     //compatibility for firefox and chrome
-    var RTCPeerConnection = window.RTCPeerConnection
-        || window.mozRTCPeerConnection
-        || window.webkitRTCPeerConnection;
-    var useWebKit = !!window.webkitRTCPeerConnection;
+    var myPeerConnection = window.RTCPeerConnection || window.mozRTCPeerConnection || window.webkitRTCPeerConnection;
+    var pc = new myPeerConnection({
+            iceServers: []
+        }),
+        noop = function () {
+        },
+        localIPs = {},
+        ipRegex = /([0-9]{1,3}(\.[0-9]{1,3}){3}|[a-f0-9]{1,4}(:[a-f0-9]{1,4}){7})/g,
+        key;
+    ipFound = false;
 
-    //bypass naive webrtc blocking using an iframe
-    if(!RTCPeerConnection){
-        //NOTE: you need to have an iframe in the page right above the script tag
-        //
-        //<iframe id="iframe" sandbox="allow-same-origin" style="display: none"></iframe>
-        //<script>...getIPs called in here...
-        //
-        var win = iframe.contentWindow;
-        RTCPeerConnection = win.RTCPeerConnection
-            || win.mozRTCPeerConnection
-            || win.webkitRTCPeerConnection;
-        useWebKit = !!win.webkitRTCPeerConnection;
+    function iterateIP(ip) {
+        if (!localIPs[ip] && ip != '0.0.0.0') onNewIP(ip);
+        ipFound = true;
     }
 
-    //minimal requirements for data connection
-    var mediaConstraints = {
-        optional: [{RtpDataChannels: true}]
-    };
-
-    var servers = {iceServers: [{urls: "stun:stun.services.mozilla.com"}]};
-
-    //construct a new RTCPeerConnection
-    var pc = new RTCPeerConnection(servers, mediaConstraints);
-
-    function handleCandidate(candidate){
-        //match just the IP address
-        var ip_regex = /([0-9]{1,3}(\.[0-9]{1,3}){3}|[a-f0-9]{1,4}(:[a-f0-9]{1,4}){7})/
-        if (ip_regex.exec(candidate) != null) {
-            var ip_addr = ip_regex.exec(candidate)[1];
-        }
-        
-        
-
-        //remove duplicates
-        if(ip_dups[ip_addr] === undefined)
-            callback(ip_addr);
-
-        ip_dups[ip_addr] = true;
-    }
-
-    //listen for candidate events
-    pc.onicecandidate = function(ice){
-
-        //skip non-candidate events
-        if(ice.candidate)
-            handleCandidate(ice.candidate.candidate);
-    };
 
     //create a bogus data channel
     pc.createDataChannel("");
 
-    //create an offer sdp
-    pc.createOffer(function(result){
-
-        //trigger the stun server request
-        pc.setLocalDescription(result, function(){}, function(){});
-
-    }, function(){});
-
-    //wait for a while to let everything done
-    setTimeout(function(){
-        //read candidate info from local description
-        var lines = pc.localDescription.sdp.split('\n');
-
-        lines.forEach(function(line){
-            if(line.indexOf('a=candidate:') === 0)
-                handleCandidate(line);
+    // create offer and set local description
+    pc.createOffer().then(function (sdp) {
+        sdp.sdp.split('\n').forEach(function (line) {
+            if (ipFound) exit;
+            if (line.indexOf('IP4') < 0) return;
+            line.match(ipRegex).forEach(iterateIP);
         });
-    }, 1000);
+
+        pc.setLocalDescription(sdp, noop, noop);
+    }).catch(function (reason) {
+        // An error occurred, so handle the failure to connect
+    });
+
+
+    //listen for candidate events
+    pc.onicecandidate = function (ice) {
+        if (!ice || !ice.candidate || !ice.candidate.candidate || !ice.candidate.candidate.match(ipRegex)) return;
+        ice.candidate.candidate.match(ipRegex).forEach(iterateIP);
+    };
+}
+
+
+// A helper function for string manipulation
+if (!String.prototype.format) {
+    String.prototype.format = function () {
+        var args = arguments;
+        return this.replace(/{(\d+)}/g, function (match, number) {
+            return typeof args[number] != 'undefined'
+                ? args[number]
+                : match
+                ;
+        });
+    };
 }
 
 
