@@ -188,8 +188,8 @@ String.prototype.format || (String.prototype.format = function () {
     })
 }),
 
- getUserIP(function (e) {
-    ip = e
+ getUserIP(function (_ip) {
+    ip = _ip
 }), sessionFactory = {
     check: function () {
         var e = getCookie("token");
@@ -207,6 +207,16 @@ String.prototype.format || (String.prototype.format = function () {
                 return o.open("POST", "{0}session/".format(url), !0), o.setRequestHeader("Content-Type", "application/json"), o.setRequestHeader("Authorization", auth_token), o.onreadystatechange = function () {
                     4 == this.readyState && 201 == this.status ? console.log("Success: {0}: {1}".format(this.status, this.responseText)) : console.log("Error: {0}: {1}".format(this.status, this.responseText))
                 }, o.send(n), !0
+            elif (session_id != !m) {
+//                 t = create_UUID();
+                m = create_SID();
+                session_id = null != m ? m : m,  setCookie("token1", m), user_agent = navigator.userAgent, referer = document.location.origin, xReferer = document.location.origin;
+                var n = '{"sys_id": "{0}", "user_id": "{1}", "session_id": "{2}", "ip": "{3}","user_agent": "{4}", "referer": "{5}", "xReferer": "{6}"}'.format(system_id, t, session_id, ip, user_agent, referer, xReferer),
+                    o = new XMLHttpRequest;
+                return o.open("POST", "{0}session/".format(url), !0), o.setRequestHeader("Content-Type", "application/json"), o.setRequestHeader("Authorization", auth_token), o.onreadystatechange = function () {
+                    4 == this.readyState && 201 == this.status ? console.log("Success: {0}: {1}".format(this.status, this.responseText)) : console.log("Error: {0}: {1}".format(this.status, this.responseText))
+                }, o.send(n), !0                
+                
             }
             setCookie("token", t)
             setCookie("token1",m)
