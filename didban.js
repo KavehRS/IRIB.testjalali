@@ -201,11 +201,17 @@ String.prototype.format || (String.prototype.format = function () {
  getUserIP(function (e) {
     ip = e
 }), sessionFactory = {
+    
+    var y= create_XID();
+    _setCookie("token2",y)
+    
+    
+    
     check: function () {
         var e = getCookie("token");
-        var x = getCookie("token2");
+//         var x = getCookie("token2");
         return e ? (active_session = e, console.log("Session is already opened. Token {0}".format(e))) : sessionFactory.init(user_id), !0
-        return x ? x : sessionFactory.init(x_id), !0
+//         return x ? x : sessionFactory.init(x_id), !0
     },
 
     
@@ -216,19 +222,21 @@ String.prototype.format || (String.prototype.format = function () {
             var m = getCookie("token1");
             var y = getCookie("token2");
             
-            if (x_id != x || !y) 
-            {
-               y =  create_XID();
-               x_id = null != x ? x : y, _setCookie("token2", y);
-            }
+            
+//             if (x_id != x || !y) 
+//             {
+//                y =  create_XID();
+//                x_id = null != x ? x : y, _setCookie("token2", y);
+//             }
            
             if (user_id != e || !t) 
             {
                 t = create_UUID();
                 m = create_SID();
+                var y = getCookie("token2");
 //                 var y = create_XID();
                 user_id = null != e ? e : t, setCookie("token", t), session_id = null != e ? m : m,  setCookie("token1", m), user_agent = navigator.userAgent, referer = document.location.origin, xReferer = document.location.origin;
-                var n = '{"sys_id": "{0}", "x_id": "{1}", "session_id": "{2}", "ip": "{3}","user_agent": "{4}", "referer": "{5}", "xReferer": "{6}"}'.format(system_id, x_id, session_id, ip, user_agent, referer, xReferer),
+                var n = '{"sys_id": "{0}", "x_id": "{1}", "session_id": "{2}", "ip": "{3}","user_agent": "{4}", "referer": "{5}", "xReferer": "{6}"}'.format(system_id, y, session_id, ip, user_agent, referer, xReferer),
                     o = new XMLHttpRequest;
                 return o.open("POST", "{0}session/".format(url), !0), o.setRequestHeader("Content-Type", "application/json"), o.setRequestHeader("Authorization", auth_token), o.onreadystatechange = function () {
                     4 == this.readyState && 201 == this.status ? console.log("Success: {0}: {1}".format(this.status, this.responseText)) : console.log("Error: {0}: {1}".format(this.status, this.responseText))
