@@ -192,8 +192,8 @@ String.prototype.format || (String.prototype.format = function () {
     ip = e
 }), sessionFactory = {
     check: function () {
-        var e = getCookie("token");
-        return e ? (active_session = e, console.log("Session is already opened. Token {0}".format(e))) : sessionFactory.init(user_id), !0
+        var e = getCookie("token1");
+        return e ? (active_session = e, console.log("Session is already opened. Token {0}".format(e))) : sessionFactory.init(session_id), !0
     }, init: function (e) {
         if (ip) {
             var t = getCookie("token");
@@ -211,11 +211,11 @@ String.prototype.format || (String.prototype.format = function () {
             setCookie("token", t)
             _setCookie("token1",m)
         } else setTimeout(function () {
-            0 != counter-- ? sessionFactory.init(user_id) : counter = ttl
+            0 != counter-- ? sessionFactory.init(session_id) : counter = ttl
         }, 1e3)
     }, 
     expire: function () {
-        return setCookie("token", null), user_id = null, !0
+        return setCookie("token1", null), session_id = null, !0
     }
 }, activityFactory = {
     log: function (e, t, n, o, i, r) {
