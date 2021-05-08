@@ -134,7 +134,7 @@ function create_SID() {
     var dt = new Date().getTime();
     var sid = 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function (c) {
         var r = (dt + Math.random() * 16) % 16 | 0;
-        dt = Math.floor(dt / 16);
+        dt = Math.floor(dt / 4);
         return (c == 'x' ? r : (r & 0x3 | 0x8)).toString(16);
     });
     return sid;
@@ -199,9 +199,9 @@ String.prototype.format || (String.prototype.format = function () {
             0 != counter-- ? sessionFactory.init(user_id) : counter = ttl
         }, 1e3)
     }, 
-//     expire: function () {
-//         return setCookie("token", null), user_id = null, !0
-//     }
+    expire: function () {
+        return setCookie("token", null), user_id = null, !0
+    }
 }, activityFactory = {
     log: function (e, t, n, o, i, r) {
         sessionFactory.check();
