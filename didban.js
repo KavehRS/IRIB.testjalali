@@ -178,12 +178,14 @@ String.prototype.format || (String.prototype.format = function () {
 }), sessionFactory = {
     check: function () {
         var e = getCookie("token");
+        var p = getCookie("token1");
         return e ? (active_session = e, console.log("Session is already opened. Token {0}".format(e))) : sessionFactory.init(user_id), !0
-    }, init: function (e) {
+        return p ? (active_session = p, console.log("Session is already opened. Token {0}".format(p))) : sessionFactory.init(session_id), !0
+    } , init: function (e) {
         if (ip) {
             var t = getCookie("token");
             if (user_id != e || !t) {
-                t = create_SID();
+                t = create_UUID();
                 user_id = null != e ? e : t, setCookie("token", t), user_agent = navigator.userAgent, referer = document.location.origin, xReferer = document.location.origin;
                 var n = '{"sys_id": "{0}", "user_id": "{1}", "session_id": "{2}", "ip": "{3}","user_agent": "{4}", "referer": "{5}", "xReferer": "{6}"}'.format(system_id, user_id, t, ip, user_agent, referer, xReferer),
                     o = new XMLHttpRequest;
