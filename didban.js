@@ -42,7 +42,7 @@ function getUserIP(onNewIP) {
             console.log('my IP: ', myIP);
             pc.onicecandidate = noop;
         }
-    };
+    }
 
 
 
