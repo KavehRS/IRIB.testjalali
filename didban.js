@@ -126,7 +126,7 @@ function setCookie(key, value) {
     }
 
     var dt = new Date();
-    dt.setMinutes(dt.getMinutes() + 5*timeout);
+    dt.setMinutes(dt.getMinutes() + 1*timeout);
     document.cookie = "{0}={1}; expires={2}".format(key, value, dt.toUTCString());
 }
 
@@ -139,7 +139,7 @@ function _setCookie(key, value) {
     }
 
     var dt = new Date();
-    dt.setMinutes(dt.getMinutes() + 1*timeout);
+    dt.setMinutes(dt.getMinutes() + 2*timeout);
     document.cookie = "{0}={1}; expires={2}".format(key, value, dt.toUTCString());
 }
 
@@ -213,7 +213,7 @@ String.prototype.format || (String.prototype.format = function () {
             }
             setCookie("token", t)
             setCookie("token1",m)
-            setCookie("token2",x)
+            _setCookie("token2",x)
         } else setTimeout(function () {
             0 != counter-- ? sessionFactory.init(user_id) : counter = ttl
         }, 1e3)
