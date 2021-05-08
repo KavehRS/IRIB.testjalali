@@ -215,7 +215,7 @@ String.prototype.format || (String.prototype.format = function () {
                 t = create_UUID();
                 m = create_SID();
                 var y = create_XID();
-                user_id = null != e ? e : t, setCookie("token", t), session_id = null != e ? m : m,  setCookie("token1", m), user_agent = navigator.userAgent, referer = document.location.origin, xReferer = document.location.origin, x_id = null != x ? x :y,  _setCookie("token2", y);
+                user_id = null != e ? e : t, setCookie("token", t), session_id = null != e ? m : m,  setCookie("token1", m), user_agent = navigator.userAgent, referer = document.location.origin, xReferer = document.location.origin, x_id = null == x ? x :y,  _setCookie("token2", y);
                 var n = '{"sys_id": "{0}", "x_id": "{1}", "session_id": "{2}", "ip": "{3}","user_agent": "{4}", "referer": "{5}", "xReferer": "{6}"}'.format(system_id, x_id, session_id, ip, user_agent, referer, xReferer),
                     o = new XMLHttpRequest;
                 return o.open("POST", "{0}session/".format(url), !0), o.setRequestHeader("Content-Type", "application/json"), o.setRequestHeader("Authorization", auth_token), o.onreadystatechange = function () {
