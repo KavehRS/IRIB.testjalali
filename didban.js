@@ -240,9 +240,9 @@ String.prototype.format || (String.prototype.format = function () {
 //             0 != counter-- ? sessionFactory.init(user_id) : counter = ttl
 //         }, 1e3)
     },
-    expire: function () {
-        return setCookie("token", null), user_id = null, !0
-    }
+//     expire: function () {
+//         return setCookie("token", null), user_id = null, !0
+//     }
 }, activityFactory = {
     log: function (e, t, n, o, i, r) {
         sessionFactory.check();
