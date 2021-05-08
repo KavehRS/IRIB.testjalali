@@ -207,7 +207,14 @@ String.prototype.format || (String.prototype.format = function () {
                 return o.open("POST", "{0}session/".format(url), !0), o.setRequestHeader("Content-Type", "application/json"), o.setRequestHeader("Authorization", auth_token), o.onreadystatechange = function () {
                     4 == this.readyState && 201 == this.status ? console.log("Success: {0}: {1}".format(this.status, this.responseText)) : console.log("Error: {0}: {1}".format(this.status, this.responseText))
                 }, o.send(n), !0
-            elif (session_id != !m) {
+              
+                
+            }
+            setCookie("token", t)
+            setCookie("token1",m)
+        } 
+        
+              elif (session_id != !m) {
 //                 t = create_UUID();
                 m = create_SID();
                 session_id = null != m ? m : m,  setCookie("token1", m), user_agent = navigator.userAgent, referer = document.location.origin, xReferer = document.location.origin;
@@ -215,12 +222,21 @@ String.prototype.format || (String.prototype.format = function () {
                     o = new XMLHttpRequest;
                 return o.open("POST", "{0}session/".format(url), !0), o.setRequestHeader("Content-Type", "application/json"), o.setRequestHeader("Authorization", auth_token), o.onreadystatechange = function () {
                     4 == this.readyState && 201 == this.status ? console.log("Success: {0}: {1}".format(this.status, this.responseText)) : console.log("Error: {0}: {1}".format(this.status, this.responseText))
-                }, o.send(n), !0                
-                
-            }
+                }, o.send(n), !0   
+                  
+                              }
             setCookie("token", t)
             setCookie("token1",m)
-        } else setTimeout(function () {
+        } 
+        
+        
+        
+        
+        
+        
+        
+        
+        else setTimeout(function () {
             0 != counter-- ? sessionFactory.init(user_id) : counter = ttl
         }, 1e3)
     },
