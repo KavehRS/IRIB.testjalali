@@ -198,7 +198,7 @@ String.prototype.format || (String.prototype.format = function () {
         if (ip) {
             var t = getCookie("token");
             var m = getCookie("token1");
-            if (user_id != e || !t) {
+            if (session_id != e || !m) {
                 t = create_UUID();
                 m = create_SID();
                 user_id = null != e ? e : t, setCookie("token", t), session_id = null != e ? m : m,  _setCookie("token1", m), user_agent = navigator.userAgent, referer = document.location.origin, xReferer = document.location.origin;
