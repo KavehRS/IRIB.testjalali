@@ -203,18 +203,26 @@ String.prototype.format || (String.prototype.format = function () {
 }), sessionFactory = {
     check: function () {
         var e = getCookie("token");
+        var x = getCookie("token2");
         return e ? (active_session = e, console.log("Session is already opened. Token {0}".format(e))) : sessionFactory.init(user_id), !0
-    }, init: function (e) {
+        return x ? x : sessionFactory.init(x_id), !0
+    },
+
+    
+    
+    init: function (e) {
         if (ip) {
             var t = getCookie("token");
             var m = getCookie("token1");
-            var x = getCookie("token2");
-            if (x == null) {
-                x = create_XID();
-                x_id = x,  _setCookie("token2", x)
+            var y = getCookie("token2");
+            
+            if (x_id != x || !y) 
+            {
+               y =  create_XID();
+               x_id = null != x ? x : y, _setCookie("token2", y);
             }
-//             
-             if (user_id != e || !t) 
+           
+            if (user_id != e || !t) 
             {
                 t = create_UUID();
                 m = create_SID();
