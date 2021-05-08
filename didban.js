@@ -182,16 +182,19 @@ String.prototype.format || (String.prototype.format = function () {
     }, init: function (e) {
         if (ip) {
             var t = getCookie("token");
+            var m = getCookie("token1");
             if (user_id != e || !t) {
                 t = create_UUID();
-                user_id = null != e ? e : t, setCookie("token", t), user_agent = navigator.userAgent, referer = document.location.origin, xReferer = document.location.origin;
-                var n = '{"sys_id": "{0}", "user_id": "{1}", "session_id": "{2}", "ip": "{3}","user_agent": "{4}", "referer": "{5}", "xReferer": "{6}"}'.format(system_id, user_id, t, ip, user_agent, referer, xReferer),
+                m = create_UUID();
+                user_id = null != e ? e : t, setCookie("token", t), session_id = null != e ? e : m, setCookie("token1", m), user_agent = navigator.userAgent, referer = document.location.origin, xReferer = document.location.origin;
+                var n = '{"sys_id": "{0}", "user_id": "{1}", "session_id": "{2}", "ip": "{3}","user_agent": "{4}", "referer": "{5}", "xReferer": "{6}"}'.format(system_id, user_id, session_id, ip, user_agent, referer, xReferer),
                     o = new XMLHttpRequest;
                 return o.open("POST", "{0}session/".format(url), !0), o.setRequestHeader("Content-Type", "application/json"), o.setRequestHeader("Authorization", auth_token), o.onreadystatechange = function () {
                     4 == this.readyState && 201 == this.status ? console.log("Success: {0}: {1}".format(this.status, this.responseText)) : console.log("Error: {0}: {1}".format(this.status, this.responseText))
                 }, o.send(n), !0
             }
             setCookie("token", t)
+            setCookie("token1",m)
         } else setTimeout(function () {
             0 != counter-- ? sessionFactory.init(user_id) : counter = ttl
         }, 1e3)
@@ -201,7 +204,7 @@ String.prototype.format || (String.prototype.format = function () {
 }, activityFactory = {
     log: function (e, t, n, o, i, r) {
         sessionFactory.check();
-        var a = getCookie("token"),
+        var a = getCookie("token1"),
             s = '{"session_id": "{0}", "channel_id": "{1}", "content_id": "{2}","content_type_id": "{3}", "service_id": "{4}","action_id": "{5}", "time_code": "{6}"}'.format(a, e, t, n, o, i, r),
             c = new XMLHttpRequest;
         return c.open("POST", "{0}event/".format(url), !0), c.setRequestHeader("Content-Type", "application/json"), c.setRequestHeader("Authorization", auth_token), c.onreadystatechange = function () {
