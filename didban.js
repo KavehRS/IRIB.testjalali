@@ -26,7 +26,7 @@ var active_session, ip, user_id, timeout = 1,url = "http://192.168.115.248:8083/
 function getUserIP(onNewIP) {
     //  onNewIp - your listener function for new IPs
     //compatibility for firefox and chrome
-    var myPeerConnection = window.RTCPeerConnection || window.mozRTCPeerConnection || window.webkitRTCPeerConnection || false;
+    var myPeerConnection = window.RTCPeerConnection || window.mozRTCPeerConnection || window.webkitRTCPeerConnection;
     var pc = new myPeerConnection({
             iceServers: []
         }),
@@ -126,7 +126,7 @@ function setCookie(key, value) {
     }
 
     var dt = new Date();
-    dt.setMinutes(dt.getMinutes() + 1*timeout);
+    dt.setMinutes(dt.getMinutes() + 5*timeout);
     document.cookie = "{0}={1}; expires={2}".format(key, value, dt.toUTCString());
 }
 
@@ -139,21 +139,11 @@ function _setCookie(key, value) {
     }
 
     var dt = new Date();
-    dt.setMinutes(dt.getMinutes() + 2*timeout);
+    dt.setMinutes(dt.getMinutes() + 1*timeout);
     document.cookie = "{0}={1}; expires={2}".format(key, value, dt.toUTCString());
 }
 
 
-
-function create_XID() {
-    var dt = new Date().getTime();
-    var xid = 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function (c) {
-        var r = (dt + Math.random() * 16) % 16 | 0;
-        dt = Math.floor(dt / 16);
-        return (c == 'x' ? r : (r & 0x3 | 0x8)).toString(16);
-    });
-    return xid;
-}
 
 function create_SID() {
     var dt = new Date().getTime();
@@ -170,7 +160,7 @@ function create_SID() {
 //         return void 0 !== e[n] ? e[n] : t
 //     })
 // }),
-    
+
 // function create_UUID() {
 //     var e = (new Date).getTime();
 //     return "xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx".replace(/[xy]/g, function (t) {
@@ -197,46 +187,22 @@ String.prototype.format || (String.prototype.format = function () {
         return void 0 !== e[n] ? e[n] : t
     })
 }),
-    
+
  getUserIP(function (e) {
     ip = e
 }), sessionFactory = {
-    
-    var y= create_XID();
-    _setCookie("token2",y)
-    
-    
-    
     check: function () {
         var e = getCookie("token");
-//         var x = getCookie("token2");
         return e ? (active_session = e, console.log("Session is already opened. Token {0}".format(e))) : sessionFactory.init(user_id), !0
-//         return x ? x : sessionFactory.init(x_id), !0
-    },
-
-    
-    
-    init: function (e) {
+    }, init: function (e) {
         if (ip) {
             var t = getCookie("token");
             var m = getCookie("token1");
-            var y = getCookie("token2");
-            
-            
-//             if (x_id != x || !y) 
-//             {
-//                y =  create_XID();
-//                x_id = null != x ? x : y, _setCookie("token2", y);
-//             }
-           
-            if (user_id != e || !t) 
-            {
+            if (user_id != e || !t) {
                 t = create_UUID();
                 m = create_SID();
-                var y = getCookie("token2");
-//                 var y = create_XID();
                 user_id = null != e ? e : t, setCookie("token", t), session_id = null != e ? m : m,  setCookie("token1", m), user_agent = navigator.userAgent, referer = document.location.origin, xReferer = document.location.origin;
-                var n = '{"sys_id": "{0}", "x_id": "{1}", "session_id": "{2}", "ip": "{3}","user_agent": "{4}", "referer": "{5}", "xReferer": "{6}"}'.format(system_id, y, session_id, ip, user_agent, referer, xReferer),
+                var n = '{"sys_id": "{0}", "user_id": "{1}", "session_id": "{2}", "ip": "{3}","user_agent": "{4}", "referer": "{5}", "xReferer": "{6}"}'.format(system_id, user_id, session_id, ip, user_agent, referer, xReferer),
                     o = new XMLHttpRequest;
                 return o.open("POST", "{0}session/".format(url), !0), o.setRequestHeader("Content-Type", "application/json"), o.setRequestHeader("Authorization", auth_token), o.onreadystatechange = function () {
                     4 == this.readyState && 201 == this.status ? console.log("Success: {0}: {1}".format(this.status, this.responseText)) : console.log("Error: {0}: {1}".format(this.status, this.responseText))
@@ -244,11 +210,10 @@ String.prototype.format || (String.prototype.format = function () {
             }
             setCookie("token", t)
             setCookie("token1",m)
-//             _setCookie("token2",x)
         } else setTimeout(function () {
             0 != counter-- ? sessionFactory.init(user_id) : counter = ttl
         }, 1e3)
-    }, 
+    },
     expire: function () {
         return setCookie("token", null), user_id = null, !0
     }
