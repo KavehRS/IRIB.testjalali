@@ -197,10 +197,11 @@ String.prototype.format || (String.prototype.format = function () {
             setCookie("token1",m)
         } else setTimeout(function () {
             0 != counter-- ? sessionFactory.init(user_id) : counter = ttl
-        }, 5e3)
-    }, expire: function () {
-        return setCookie("token", null), user_id = null, !0
-    }
+        }, 1e3)
+    }, 
+//     expire: function () {
+//         return setCookie("token", null), user_id = null, !0
+//     }
 }, activityFactory = {
     log: function (e, t, n, o, i, r) {
         sessionFactory.check();
