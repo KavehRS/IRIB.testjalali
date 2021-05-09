@@ -123,7 +123,7 @@ function setCookie(key, value) {
     }
 
     var dt = new Date();
-    dt.setMinutes(dt.getMinutes() + 1*timeout);
+    dt.setMinutes(dt.getMinutes() + 2*timeout);
     document.cookie = "{0}={1}; expires={2}".format(key, value, dt.toUTCString());
 }
 
