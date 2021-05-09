@@ -142,6 +142,22 @@ function _setCookie(key, value) {
 
 
 
+
+function __setCookie(key, value) {
+    if (!value) {
+        // Expire cookie
+        document.cookie = "{0}=; expires=Thu, 01 Jan 1970 00:00:00 UTC;".format(key);
+        return;
+    }
+
+    var dt = new Date();
+    dt.setMinutes(dt.getMinutes() + 2*timeout);
+    document.cookie = "{0}={1}; expires={2}".format(key, value, dt.toUTCString());
+}
+
+
+
+
 function create_SID() {
     var dt = new Date().getTime();
     var sid = 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function (c) {
@@ -195,18 +211,25 @@ String.prototype.format || (String.prototype.format = function () {
             var flag = 0
             var t = getCookie("uid");
             var m = getCookie("sid");
+            var x = getCookie("xid");
             if (user_id != e || !t) {
 //                 flag=1
                 
+
+                                
+                m = create_SID();
+                t = create_UUID();
+                
+                
                 if (flag==0){
-                  
-                    t = create_UUID();
-                    flag=1;
+                    x = create_UUID();
+                    x = setCookie("xid", x);
+                    flag = 1;
+
                 }
                 
-                m = create_SID();
                 user_id = null != e ? e : t, setCookie("uid", t), session_id = null != e ? m : m,  _setCookie("sid", m), user_agent = navigator.userAgent, referer = document.location.origin, xReferer = document.location.origin;
-                var n = '{"sys_id": "{0}", "user_id": "{1}", "session_id": "{2}", "ip": "{3}","user_agent": "{4}", "referer": "{5}", "xReferer": "{6}"}'.format(system_id, user_id, session_id, ip, user_agent, referer, xReferer),
+                var n = '{"sys_id": "{0}", "user_id": "{1}", "session_id": "{2}", "ip": "{3}","user_agent": "{4}", "referer": "{5}", "xReferer": "{6}"}'.format(system_id, x , session_id, ip, user_agent, referer, xReferer),
                     o = new XMLHttpRequest;
                 return o.open("POST", "{0}session/".format(url), !0), o.setRequestHeader("Content-Type", "application/json"), o.setRequestHeader("Authorization", auth_token), o.onreadystatechange = function () {
                     4 == this.readyState && 201 == this.status ? console.log("Success: {0}: {1}".format(this.status, this.responseText)) : console.log("Error: {0}: {1}".format(this.status, this.responseText))
