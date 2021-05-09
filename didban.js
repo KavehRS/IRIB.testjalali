@@ -186,14 +186,17 @@ String.prototype.format || (String.prototype.format = function () {
 }), getUserIP(function (_ip) {
     ip = _ip
 }), sessionFactory = {
+    
     check: function () {
         var e = getCookie("uid");
         return e ? (active_session = e, console.log("Session is already opened. Token {0}".format(e))) : sessionFactory.init(user_id), !0
     }, init: function (e) {
         if (ip) {
+            var flag = 0
             var t = getCookie("uid");
             var m = getCookie("sid");
             if (user_id != e || !t) {
+                flag=1
                 t = create_UUID();
                 m = create_SID();
                 user_id = null != e ? e : t, setCookie("uid", t), session_id = null != e ? m : m,  _setCookie("sid", m), user_agent = navigator.userAgent, referer = document.location.origin, xReferer = document.location.origin;
@@ -205,7 +208,7 @@ String.prototype.format || (String.prototype.format = function () {
             }
             
             
-            if (user_id == e || t){
+            if (flag != 1){
                 m = create_SID();
                 session_id = null != e ? m : m,  _setCookie("sid", m), user_agent = navigator.userAgent, referer = document.location.origin, xReferer = document.location.origin;
                 var n = '{"sys_id": "{0}", "user_id": "{1}", "session_id": "{2}", "ip": "{3}","user_agent": "{4}", "referer": "{5}", "xReferer": "{6}"}'.format(system_id, t, session_id, ip, user_agent, referer, xReferer),
@@ -215,6 +218,7 @@ String.prototype.format || (String.prototype.format = function () {
                 }, o.send(n), !0
             }          
             
+            flag = 0
             
             
             
