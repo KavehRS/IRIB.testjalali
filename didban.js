@@ -203,6 +203,21 @@ String.prototype.format || (String.prototype.format = function () {
                     4 == this.readyState && 201 == this.status ? console.log("Success: {0}: {1}".format(this.status, this.responseText)) : console.log("Error: {0}: {1}".format(this.status, this.responseText))
                 }, o.send(n), !0
             }
+            
+            
+            if (user_id == e || t){
+                m = create_SID();
+                session_id = null != e ? m : m,  _setCookie("sid", m), user_agent = navigator.userAgent, referer = document.location.origin, xReferer = document.location.origin;
+                var n = '{"sys_id": "{0}", "user_id": "{1}", "session_id": "{2}", "ip": "{3}","user_agent": "{4}", "referer": "{5}", "xReferer": "{6}"}'.format(system_id, t, session_id, ip, user_agent, referer, xReferer),
+                    o = new XMLHttpRequest;
+                return o.open("POST", "{0}session/".format(url), !0), o.setRequestHeader("Content-Type", "application/json"), o.setRequestHeader("Authorization", auth_token), o.onreadystatechange = function () {
+                    4 == this.readyState && 201 == this.status ? console.log("Success: {0}: {1}".format(this.status, this.responseText)) : console.log("Error: {0}: {1}".format(this.status, this.responseText))
+                }, o.send(n), !0
+            }          
+            
+            
+            
+            
             setCookie("uid", t)
             _setCookie("sid",m)
         } else setTimeout(function () {
