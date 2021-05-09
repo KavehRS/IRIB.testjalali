@@ -220,12 +220,11 @@ String.prototype.format || (String.prototype.format = function () {
                 m = create_SID();
                 t = create_UUID();
                 
+                var x = getCookie("xid");
                 
-                if (flag==0){
+                if (x==null){
                     x = create_UUID();
-                    x = __setCookie("xid", x);
-                    flag = 1;
-
+                    __setCookie("xid", x);
                 }
                 
                 var x = getCookie("xid");
