@@ -151,7 +151,7 @@ function __setCookie(key, value) {
     }
 
     var dt = new Date();
-    dt.setMinutes(dt.getMinutes() + 2*timeout);
+    dt.setMinutes(dt.getMinutes() + 5*timeout);
     document.cookie = "{0}={1}; expires={2}".format(key, value, dt.toUTCString());
 }
 
