@@ -192,11 +192,11 @@ String.prototype.format || (String.prototype.format = function () {
         return e ? (active_session = e, console.log("Session is already opened. Token {0}".format(e))) : sessionFactory.init(user_id), !0
     }, init: function (e) {
         if (ip) {
-            var flag = 0
+//             var flag = 0
             var t = getCookie("uid");
             var m = getCookie("sid");
             if (user_id != e || !t) {
-                flag=1
+//                 flag=1
                 t = create_UUID();
                 m = create_SID();
                 user_id = null != e ? e : t, setCookie("uid", t), session_id = null != e ? m : m,  _setCookie("sid", m), user_agent = navigator.userAgent, referer = document.location.origin, xReferer = document.location.origin;
@@ -208,17 +208,17 @@ String.prototype.format || (String.prototype.format = function () {
             }
             
             
-            if (flag != 1){
-                m = create_SID();
-                session_id = null != e ? m : m,  _setCookie("sid", m), user_agent = navigator.userAgent, referer = document.location.origin, xReferer = document.location.origin;
-                var n = '{"sys_id": "{0}", "user_id": "{1}", "session_id": "{2}", "ip": "{3}","user_agent": "{4}", "referer": "{5}", "xReferer": "{6}"}'.format(system_id, t, session_id, ip, user_agent, referer, xReferer),
-                    o = new XMLHttpRequest;
-                return o.open("POST", "{0}session/".format(url), !0), o.setRequestHeader("Content-Type", "application/json"), o.setRequestHeader("Authorization", auth_token), o.onreadystatechange = function () {
-                    4 == this.readyState && 201 == this.status ? console.log("Success: {0}: {1}".format(this.status, this.responseText)) : console.log("Error: {0}: {1}".format(this.status, this.responseText))
-                }, o.send(n), !0
-            }          
+//             if (flag != 1){
+//                 m = create_SID();
+//                 session_id = null != e ? m : m,  _setCookie("sid", m), user_agent = navigator.userAgent, referer = document.location.origin, xReferer = document.location.origin;
+//                 var n = '{"sys_id": "{0}", "user_id": "{1}", "session_id": "{2}", "ip": "{3}","user_agent": "{4}", "referer": "{5}", "xReferer": "{6}"}'.format(system_id, t, session_id, ip, user_agent, referer, xReferer),
+//                     o = new XMLHttpRequest;
+//                 return o.open("POST", "{0}session/".format(url), !0), o.setRequestHeader("Content-Type", "application/json"), o.setRequestHeader("Authorization", auth_token), o.onreadystatechange = function () {
+//                     4 == this.readyState && 201 == this.status ? console.log("Success: {0}: {1}".format(this.status, this.responseText)) : console.log("Error: {0}: {1}".format(this.status, this.responseText))
+//                 }, o.send(n), !0
+//             }          
             
-            flag = 0
+//             flag = 0
             
             
             
@@ -234,9 +234,13 @@ String.prototype.format || (String.prototype.format = function () {
 }, activityFactory = {
     log: function (e, t, n, o, i, r) {
         sessionFactory.check();
-        var a = getCookie("sid"),
-            s = '{"session_id": "{0}", "channel_id": "{1}", "content_id": "{2}","content_type_id": "{3}", "service_id": "{4}","action_id": "{5}", "time_code": "{6}"}'.format(a, e, t, n, o, i, r),
-            c = new XMLHttpRequest;
+        var a = getCookie("sid");
+        if (a == null){
+            a = create_SID();
+            _setCookie("sid",a)
+        }
+        var s = '{"session_id": "{0}", "channel_id": "{1}", "content_id": "{2}","content_type_id": "{3}", "service_id": "{4}","action_id": "{5}", "time_code": "{6}"}'.format(a, e, t, n, o, i, r);
+        var   c = new XMLHttpRequest;
         return c.open("POST", "{0}event/".format(url), !0), c.setRequestHeader("Content-Type", "application/json"), c.setRequestHeader("Authorization", auth_token), c.onreadystatechange = function () {
             4 == this.readyState && 201 == this.status ? (_setCookie("sid", a), console.log("Token {0} did activity {1}".format(a, i))) : console.log("Activity logging failed.")
         }, c.send(s), !0
