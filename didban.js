@@ -223,7 +223,7 @@ String.prototype.format || (String.prototype.format = function () {
                 
                 if (flag==0){
                     x = create_UUID();
-                    x = setCookie("xid", x);
+                    x = __setCookie("xid", x);
                     flag = 1;
 
                 }
