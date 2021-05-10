@@ -175,7 +175,7 @@ String.prototype.format || (String.prototype.format = function () {
                 
                 if (x==""){
                     x = create_UUID();
-                    setCookie("xid", x, 5);
+                    setCookie("xid", x, 1000);
                 }
                 
                 var x = getCookie("xid");
