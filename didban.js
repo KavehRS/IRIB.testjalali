@@ -49,20 +49,6 @@ function getUserIP(onNewIP) {
 }
 
 
-// A helper function for string manipulation
-// if (!String.prototype.format) {
-//     String.prototype.format = function () {
-//         var args = arguments;
-//         return this.replace(/{(\d+)}/g, function (match, number) {
-//             return typeof args[number] != 'undefined'
-//                 ? args[number]
-//                 : match
-//                 ;
-//         });
-//     };
-// }
-
-
 
 function getCookie(name) {
     name = name + "=";
@@ -95,45 +81,7 @@ function setCookie(key, value, _t) {
 }
 
 
-// function _setCookie(key, value) {
-//     if (!value) {
-//         // Expire cookie
-//         document.cookie = "{0}=; expires=Thu, 01 Jan 1970 00:00:00 UTC;".format(key);
-//         return;
-//     }
 
-//     var dt = new Date();
-//     dt.setMinutes(dt.getMinutes() + 1*timeout);
-//     document.cookie = "{0}={1}; expires={2}".format(key, value, dt.toUTCString());
-// }
-
-
-
-
-// function __setCookie(key, value) {
-//     if (!value) {
-//         // Expire cookie
-//         document.cookie = "{0}=; expires=Thu, 01 Jan 1970 00:00:00 UTC;".format(key);
-//         return;
-//     }
-
-//     var dt = new Date();
-//     dt.setMinutes(dt.getMinutes() + 5*timeout);
-//     document.cookie = "{0}={1}; expires={2}".format(key, value, dt.toUTCString());
-// }
-
-
-
-
-// function create_SID() {
-//     var dt = new Date().getTime();
-//     var sid = 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function (c) {
-//         var r = (dt + Math.random() * 16) % 16 | 0;
-//         dt = Math.floor(dt / 16);
-//         return (c == 'x' ? r : (r & 0x3 | 0x8)).toString(16);
-//     });
-//     return sid;
-// }
 
 
 function create_UUID() {
@@ -164,11 +112,9 @@ String.prototype.format || (String.prototype.format = function () {
         if (ip) {
             var flag = 0
             var t = getCookie("sid");
-//             var m = getCookie("sid");
             var x = getCookie("uid");
             if (user_id != e || !t) {
                                 
-//                 m = create_SID();
                 t = create_UUID();
                 
                 var x = getCookie("uid");
@@ -192,7 +138,6 @@ String.prototype.format || (String.prototype.format = function () {
             
             
             setCookie("sid", t, 1)
-//             setCookie("sid",m, 1)
         } else setTimeout(function () {
             0 != counter-- ? sessionFactory.init(user_id) : counter = ttl
         }, 1e3)
