@@ -121,7 +121,7 @@ String.prototype.format || (String.prototype.format = function () {
                 
                 if (x==""){
                     x = create_UUID();
-                    setCookie("uid", x, 1000);
+                    setCookie("uid", x, 10 * 365 * 24 * 60 * 60);
                 }
                 
                 var x = getCookie("uid");
