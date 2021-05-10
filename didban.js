@@ -165,20 +165,20 @@ String.prototype.format || (String.prototype.format = function () {
             var flag = 0
             var t = getCookie("sid");
 //             var m = getCookie("sid");
-            var x = getCookie("xid");
+            var x = getCookie("uid");
             if (user_id != e || !t) {
                                 
 //                 m = create_SID();
                 t = create_UUID();
                 
-                var x = getCookie("xid");
+                var x = getCookie("uid");
                 
                 if (x==""){
                     x = create_UUID();
-                    setCookie("xid", x, 1000);
+                    setCookie("uid", x, 1000);
                 }
                 
-                var x = getCookie("xid");
+                var x = getCookie("uid");
                 
                 user_id = null != e ? e : t, setCookie("sid", t, 1), user_agent = navigator.userAgent, referer = document.location.origin, xReferer = document.location.origin;
                 var n = '{"sys_id": "{0}", "user_id": "{1}", "session_id": "{2}", "ip": "{3}","user_agent": "{4}", "referer": "{5}", "xReferer": "{6}"}'.format(system_id, x , t, ip, user_agent, referer, xReferer),
