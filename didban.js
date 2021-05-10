@@ -1,5 +1,5 @@
-var active_session, ip, user_id, timeout = 1,url = "http://192.168.143.18:8876/api/", system_id = "Developer",
-    auth_token = "Bearer Lrn90RnJZ+X5nVgQ9cKjrJSpgHTQtkLz3Mw1sX4B7RYnhNdy0Oqp",
+var active_session, ip, user_id, timeout = 1,url = "https://statistics.irib.ir:8876/api/", system_id = "iribcsspr99",
+    auth_token = "Bearer DE9C3CFBF147067970C4CAC7F3874247",
     ttl = 30, counter = ttl, ACTIVITY = {Play: 1, Pause: 2, FDStart: 3, FDEnd: 4, BDStart: 5, BDEnd: 6, ContentView: 7},
     SERVICE_TYPE = {Live: 1, TimeShift: 2, CatchUp: 3, OnDemand: 4},
     CONTENT_TYPE = {Video: 1, Audio: 2, Image: 3, Text: 4};
