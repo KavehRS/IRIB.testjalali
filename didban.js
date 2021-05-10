@@ -95,32 +95,32 @@ function setCookie(key, value, _t) {
 }
 
 
-function _setCookie(key, value) {
-    if (!value) {
-        // Expire cookie
-        document.cookie = "{0}=; expires=Thu, 01 Jan 1970 00:00:00 UTC;".format(key);
-        return;
-    }
+// function _setCookie(key, value) {
+//     if (!value) {
+//         // Expire cookie
+//         document.cookie = "{0}=; expires=Thu, 01 Jan 1970 00:00:00 UTC;".format(key);
+//         return;
+//     }
 
-    var dt = new Date();
-    dt.setMinutes(dt.getMinutes() + 1*timeout);
-    document.cookie = "{0}={1}; expires={2}".format(key, value, dt.toUTCString());
-}
-
-
+//     var dt = new Date();
+//     dt.setMinutes(dt.getMinutes() + 1*timeout);
+//     document.cookie = "{0}={1}; expires={2}".format(key, value, dt.toUTCString());
+// }
 
 
-function __setCookie(key, value) {
-    if (!value) {
-        // Expire cookie
-        document.cookie = "{0}=; expires=Thu, 01 Jan 1970 00:00:00 UTC;".format(key);
-        return;
-    }
 
-    var dt = new Date();
-    dt.setMinutes(dt.getMinutes() + 5*timeout);
-    document.cookie = "{0}={1}; expires={2}".format(key, value, dt.toUTCString());
-}
+
+// function __setCookie(key, value) {
+//     if (!value) {
+//         // Expire cookie
+//         document.cookie = "{0}=; expires=Thu, 01 Jan 1970 00:00:00 UTC;".format(key);
+//         return;
+//     }
+
+//     var dt = new Date();
+//     dt.setMinutes(dt.getMinutes() + 5*timeout);
+//     document.cookie = "{0}={1}; expires={2}".format(key, value, dt.toUTCString());
+// }
 
 
 
