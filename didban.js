@@ -1,5 +1,5 @@
-var active_session, ip, user_id, timeout = 1,url = "http://192.168.200.35:8000/api/", system_id = "Developer",
-    auth_token = "Token 2156356dfa66dfd64b60ca2992509ada",
+var active_session, ip, user_id, timeout = 1,url = "http://192.168.143.18:8876/api/", system_id = "Developer",
+    auth_token = "Bearer DE9C3CFBF147067970C4CAC7F3874247",
     ttl = 30, counter = ttl, ACTIVITY = {Play: 1, Pause: 2, FDStart: 3, FDEnd: 4, BDStart: 5, BDEnd: 6, ContentView: 7},
     SERVICE_TYPE = {Live: 1, TimeShift: 2, CatchUp: 3, OnDemand: 4},
     CONTENT_TYPE = {Video: 1, Audio: 2, Image: 3, Text: 4};
@@ -49,56 +49,56 @@ function getUserIP(onNewIP) {
 }
 
 
-function getLocalIP() {
-  return new Promise(function(resolve, reject) {
-    // NOTE: window.RTCPeerConnection is "not a constructor" in FF22/23
-    var RTCPeerConnection = /*window.RTCPeerConnection ||*/ window.webkitRTCPeerConnection || window.mozRTCPeerConnection;
+// function getLocalIP() {
+//   return new Promise(function(resolve, reject) {
+//     // NOTE: window.RTCPeerConnection is "not a constructor" in FF22/23
+//     var RTCPeerConnection = /*window.RTCPeerConnection ||*/ window.webkitRTCPeerConnection || window.mozRTCPeerConnection;
 
-    if (!RTCPeerConnection) {
-      reject('Your browser does not support this API');
-    }
+//     if (!RTCPeerConnection) {
+//       reject('Your browser does not support this API');
+//     }
     
-    var rtc = new RTCPeerConnection({iceServers:[]});
-    var addrs = {};
-    addrs["0.0.0.0"] = false;
+//     var rtc = new RTCPeerConnection({iceServers:[]});
+//     var addrs = {};
+//     addrs["0.0.0.0"] = false;
     
-    function grepSDP(sdp) {
-        var hosts = [];
-        var finalIP = '';
-        sdp.split('\r\n').forEach(function (line) { // c.f. http://tools.ietf.org/html/rfc4566#page-39
-            if (~line.indexOf("a=candidate")) {     // http://tools.ietf.org/html/rfc4566#section-5.13
-                var parts = line.split(' '),        // http://tools.ietf.org/html/rfc5245#section-15.1
-                    addr = parts[4],
-                    type = parts[7];
-                if (type === 'host') {
-                    finalIP = addr;
-                }
-            } else if (~line.indexOf("c=")) {       // http://tools.ietf.org/html/rfc4566#section-5.7
-                var parts = line.split(' '),
-                    addr = parts[2];
-                finalIP = addr;
-            }
-        });
-        return finalIP;
-    }
+//     function grepSDP(sdp) {
+//         var hosts = [];
+//         var finalIP = '';
+//         sdp.split('\r\n').forEach(function (line) { // c.f. http://tools.ietf.org/html/rfc4566#page-39
+//             if (~line.indexOf("a=candidate")) {     // http://tools.ietf.org/html/rfc4566#section-5.13
+//                 var parts = line.split(' '),        // http://tools.ietf.org/html/rfc5245#section-15.1
+//                     addr = parts[4],
+//                     type = parts[7];
+//                 if (type === 'host') {
+//                     finalIP = addr;
+//                 }
+//             } else if (~line.indexOf("c=")) {       // http://tools.ietf.org/html/rfc4566#section-5.7
+//                 var parts = line.split(' '),
+//                     addr = parts[2];
+//                 finalIP = addr;
+//             }
+//         });
+//         return finalIP;
+//     }
     
-    if (1 || window.mozRTCPeerConnection) {      // FF [and now Chrome!] needs a channel/stream to proceed
-        rtc.createDataChannel('', {reliable:false});
-    };
+//     if (1 || window.mozRTCPeerConnection) {      // FF [and now Chrome!] needs a channel/stream to proceed
+//         rtc.createDataChannel('', {reliable:false});
+//     };
     
-    rtc.onicecandidate = function (evt) {
-        // convert the candidate to SDP so we can run it through our general parser
-        // see https://twitter.com/lancestout/status/525796175425720320 for details
-        if (evt.candidate) {
-          var addr = grepSDP("a="+evt.candidate.candidate);
-          resolve(addr);
-        }
-    };
-    rtc.createOffer(function (offerDesc) {
-        rtc.setLocalDescription(offerDesc);
-    }, function (e) { console.warn("offer failed", e); });
-  });
-}
+//     rtc.onicecandidate = function (evt) {
+//         // convert the candidate to SDP so we can run it through our general parser
+//         // see https://twitter.com/lancestout/status/525796175425720320 for details
+//         if (evt.candidate) {
+//           var addr = grepSDP("a="+evt.candidate.candidate);
+//           resolve(addr);
+//         }
+//     };
+//     rtc.createOffer(function (offerDesc) {
+//         rtc.setLocalDescription(offerDesc);
+//     }, function (e) { console.warn("offer failed", e); });
+//   });
+// }
 
 
 
@@ -156,13 +156,13 @@ String.prototype.format || (String.prototype.format = function () {
 }), 
     
     
-//     getUserIP(function (_ip) {
-//     ip = _ip
-// }), 
+    getUserIP(function (_ip) {
+    ip = _ip
+}), 
 // myIP(function(_ip){ip = console.log(_ip);});
-getLocalIP(function(_ip){
-    var ip = console.log(_ip);
-}); sessionFactory = {
+// getLocalIP(function(_ip){
+//     var ip = console.log(_ip);
+// }); sessionFactory = {
 
     check: function () {
         var e = getCookie("sid");
@@ -183,7 +183,7 @@ getLocalIP(function(_ip){
                 x = create_UUID();
                 setCookie("uid", x, 10);
             }
-            getLocalIP(function(_ip){ var ip = console.log(_ip); });
+//             getLocalIP(function(_ip){ var ip = console.log(_ip); });
 //             getLocalIP(function(_ip){ ip = console.log(_ip); });
             var x = getCookie("uid");
             user_id = null != e ? e : t, setCookie("sid", t, 1), user_agent = navigator.userAgent, referer = document.location.origin, xReferer = document.location.origin;
