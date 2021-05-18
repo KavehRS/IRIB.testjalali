@@ -122,12 +122,12 @@ String.prototype.format || (String.prototype.format = function () {
 
             if (x==""){
                 x = create_UUID();
-                setCookie("uid", x, 10 * 365 * 24 * 60 * 60);
+                setCookie("uid", x, 3);
             }
 
             var x = getCookie("uid");
 
-            user_id = null != e ? e : t, setCookie("sid", t, 30), user_agent = navigator.userAgent, referer = document.location.origin, xReferer = document.location.origin;
+            user_id = null != e ? e : t, setCookie("sid", t, 1), user_agent = navigator.userAgent, referer = document.location.origin, xReferer = document.location.origin;
             var n = '{"sys_id": "{0}", "user_id": "{1}", "session_id": "{2}", "ip": "{3}","user_agent": "{4}", "referer": "{5}", "xReferer": "{6}"}'.format(system_id, x , t, ip, user_agent, referer, xReferer),
                 o = new XMLHttpRequest;
             return o.open("POST", "{0}session/".format(url), !0), o.setRequestHeader("Content-Type", "application/json"), o.setRequestHeader("Authorization", auth_token), o.onreadystatechange = function () {
@@ -138,7 +138,7 @@ String.prototype.format || (String.prototype.format = function () {
 
 
 
-        setCookie("sid", t, 30)
+        setCookie("sid", t, 1)
          if(!ip) {setTimeout(function () {
             0 != counter-- ? sessionFactory.init(user_id) : counter = ttl
         }, 1e3)}
@@ -154,7 +154,7 @@ String.prototype.format || (String.prototype.format = function () {
         var s = '{"session_id": "{0}", "channel_id": "{1}", "content_id": "{2}","content_type_id": "{3}", "service_id": "{4}","action_id": "{5}", "time_code": "{6}"}'.format(a, e, t, n, o, i, r);
         var   c = new XMLHttpRequest;
         return c.open("POST", "{0}event/".format(url), !0), c.setRequestHeader("Content-Type", "application/json"), c.setRequestHeader("Authorization", auth_token), c.onreadystatechange = function () {
-            4 == this.readyState && 201 == this.status ? (setCookie("sid", a, 30), console.log("Token {0} did activity {1}".format(a, i))) : console.log("Activity logging failed.")
+            4 == this.readyState && 201 == this.status ? (setCookie("sid", a, 10), console.log("Token {0} did activity {1}".format(a, i))) : console.log("Activity logging failed.")
         }, c.send(s), !0
     }
 };
