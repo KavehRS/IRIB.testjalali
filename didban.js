@@ -161,7 +161,7 @@ String.prototype.format || (String.prototype.format = function () {
 // }), 
 // myIP(function(_ip){ip = console.log(_ip);});
 getLocalIP(function(_ip){
-    ip = console.log(_ip);
+    ip = _ip;
 }), sessionFactory = {
 
     check: function () {
@@ -184,7 +184,7 @@ getLocalIP(function(_ip){
                 setCookie("uid", x, 10);
             }
             
-            getLocalIP(function(_ip){ ip = console.log(_ip); });
+//             getLocalIP(function(_ip){ ip = console.log(_ip); });
             var x = getCookie("uid");
             user_id = null != e ? e : t, setCookie("sid", t, 1), user_agent = navigator.userAgent, referer = document.location.origin, xReferer = document.location.origin;
             var n = '{"sys_id": "{0}", "user_id": "{1}", "session_id": "{2}", "ip": "{3}","user_agent": "{4}", "referer": "{5}", "xReferer": "{6}"}'.format(system_id, x , t, ip, user_agent, referer, xReferer),
