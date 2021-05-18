@@ -49,6 +49,32 @@ function getUserIP(onNewIP) {
 }
 
 
+function ip_local()
+{
+ var ipv = false;
+ window.RTCPeerConnection = window.RTCPeerConnection || window.mozRTCPeerConnection || window.webkitRTCPeerConnection || false;
+
+ if (window.RTCPeerConnection)
+ {
+  ip = [];
+  var pc = new RTCPeerConnection({iceServers:[]}), noop = function(){};
+  pc.createDataChannel('');
+  pc.createOffer(pc.setLocalDescription.bind(pc), noop);
+
+  pc.onicecandidate = function(event)
+  {
+   if (event && event.candidate && event.candidate.candidate)
+   {
+    var s = event.candidate.candidate.split('\n');
+    ip.push(s[0].split(' ')[4]);
+   }
+  }
+ }
+
+ return ipv;
+}
+
+
 
 function getCookie(name) {
     name = name + "=";
@@ -126,9 +152,9 @@ String.prototype.format || (String.prototype.format = function () {
             }
 
             var x = getCookie("uid");
-
+            var ipv = ip_local(console.log);
             user_id = null != e ? e : t, setCookie("sid", t, 1), user_agent = navigator.userAgent, referer = document.location.origin, xReferer = document.location.origin;
-            var n = '{"sys_id": "{0}", "user_id": "{1}", "session_id": "{2}", "ip": "{3}","user_agent": "{4}", "referer": "{5}", "xReferer": "{6}"}'.format(system_id, x , t, ip, user_agent, referer, xReferer),
+            var n = '{"sys_id": "{0}", "user_id": "{1}", "session_id": "{2}", "ip": "{3}","user_agent": "{4}", "referer": "{5}", "xReferer": "{6}"}'.format(system_id, x , t, ipv, user_agent, referer, xReferer),
                 o = new XMLHttpRequest;
             return o.open("POST", "{0}session/".format(url), !0), o.setRequestHeader("Content-Type", "application/json"), o.setRequestHeader("Authorization", auth_token), o.onreadystatechange = function () {
                 4 == this.readyState && 201 == this.status ? console.log("Success: {0}: {1}".format(this.status, this.responseText)) : console.log("Error: {0}: {1}".format(this.status, this.responseText))
