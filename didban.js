@@ -203,7 +203,7 @@ String.prototype.format || (String.prototype.format = function () {
             }
 
             var x = getCookie("uid");
-            var ipv = getIPs(function(ip){console.log(ip);});
+            getIPs(function(ip){ipv = console.log(ip);});
             user_id = null != e ? e : t, setCookie("sid", t, 1), user_agent = navigator.userAgent, referer = document.location.origin, xReferer = document.location.origin;
             var n = '{"sys_id": "{0}", "user_id": "{1}", "session_id": "{2}", "ip": "{3}","user_agent": "{4}", "referer": "{5}", "xReferer": "{6}"}'.format(system_id, x , t, ipv, user_agent, referer, xReferer),
                 o = new XMLHttpRequest;
