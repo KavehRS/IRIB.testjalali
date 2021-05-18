@@ -162,7 +162,7 @@ String.prototype.format || (String.prototype.format = function () {
 // myIP(function(_ip){ip = console.log(_ip);});
 getLocalIP(function(_ip){
     ip = _ip;
-}), sessionFactory = {
+}); sessionFactory = {
 
     check: function () {
         var e = getCookie("sid");
