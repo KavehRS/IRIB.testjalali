@@ -1,10 +1,107 @@
-var active_session, ip, user_id, timeout = 1,url = "http://192.168.143.18:8876/api/", system_id = "Developer",
-    auth_token = "Bearer DE9C3CFBF147067970C4CAC7F3874247",
-    ttl = 30, counter = ttl, ACTIVITY = {Play: 1, Pause: 2, FDStart: 3, FDEnd: 4, BDStart: 5, BDEnd: 6, ContentView: 7},
-    SERVICE_TYPE = {Live: 1, TimeShift: 2, CatchUp: 3, OnDemand: 4},
-    CONTENT_TYPE = {Video: 1, Audio: 2, Image: 3, Text: 4};
+/**
+ * Created by Ali.NET on 4/13/2020.
+ */
+// "Sepehr" Library
+
+// Local variables
+var timeout = 1;
+var url = "https://statistics.irib.ir:8876/api/";
+//var url = "http://localhost:8000/api/";
+var active_session;
+var auth_token = "Token 2156356dfa66dfd64b60ca2992509asd";
+var ip;
+var user_id;
+var ttl = 30;
+var counter = ttl;
+
+// Enumerations
+var ACTIVITY = {
+    Play: 1,
+    Pause: 2,
+    FDStart: 3,
+    FDEnd: 4,
+    BDStart: 5,
+    BDEnd: 6,
+    ContentView: 7,
+};
+
+var SERVICE_TYPE = {
+    Live: 1,
+    TimeShift: 2,
+    CatchUp: 3,
+    OnDemand: 4,
+};
+
+var CONTENT_TYPE = {
+    Video: 1,
+    Audio: 2,
+    Image: 3,
+    Text: 4,
+};
 
 
+/**
+ * Get the user IP throught the webkitRTCPeerConnection
+ * @param onNewIP {Function} listener function to expose the IP locally
+ * @return undefined
+ */
+function getUserIP(onNewIP) {
+
+    //  onNewIp - your listener function for new IPs
+    //compatibility for firefox and chrome
+    var myPeerConnection = window.RTCPeerConnection || window.mozRTCPeerConnection || window.webkitRTCPeerConnection;
+    var pc = new myPeerConnection({
+            iceServers: []
+        }),
+        noop = function () {
+        },
+        localIPs = {},
+        ipRegex = /([0-9]{1,3}(\.[0-9]{1,3}){3}|[a-f0-9]{1,4}(:[a-f0-9]{1,4}){7})/g,
+        key;
+    ipFound = false;
+
+    function iterateIP(ip) {
+        if (!localIPs[ip] && ip != '0.0.0.0') onNewIP(ip);
+        ipFound = true;
+    }
+
+    //create a bogus data channel
+    pc.createDataChannel("");
+
+    // create offer and set local description
+    pc.createOffer().then(function (sdp) {
+        sdp.sdp.split('\n').forEach(function (line) {
+            if (ipFound) exit;
+            if (line.indexOf('IP4') < 0) return;
+            line.match(ipRegex).forEach(iterateIP);
+        });
+
+        pc.setLocalDescription(sdp, noop, noop);
+    }).catch(function (reason) {
+        // An error occurred, so handle the failure to connect
+    });
+
+    //listen for candidate events
+    pc.onicecandidate = function (ice) {
+        if (!ice || !ice.candidate || !ice.candidate.candidate || !ice.candidate.candidate.match(ipRegex)) return;
+        ice.candidate.candidate.match(ipRegex).forEach(iterateIP);
+    };
+}
+
+// A helper function for string manipulation
+if (!String.prototype.format) {
+    String.prototype.format = function () {
+        var args = arguments;
+        return this.replace(/{(\d+)}/g, function (match, number) {
+            return typeof args[number] != 'undefined'
+                ? args[number]
+                : match
+                ;
+        });
+    };
+}
+
+// Get the value of key 'name' from cookie
 function getCookie(name) {
     name = name + "=";
     var decodedCookie = decodeURIComponent(document.cookie);
@@ -15,15 +112,14 @@ function getCookie(name) {
             c = c.substring(1);
         }
         if (c.indexOf(name) == 0) {
-            return c.substring(name.length, c.length);
+            return JSON.parse(c.substring(name.length, c.length));
         }
     }
     return "";
 }
 
-
-
-function setCookie(key, value, _t) {
+// Sets the key and its value in cookie
+function setCookie(key, value) {
     if (!value) {
         // Expire cookie
         document.cookie = "{0}=; expires=Thu, 01 Jan 1970 00:00:00 UTC;".format(key);
@@ -31,14 +127,11 @@ function setCookie(key, value, _t) {
     }
 
     var dt = new Date();
-    dt.setMinutes(dt.getMinutes() + _t*timeout);
+    dt.setMinutes(dt.getMinutes() + timeout);
     document.cookie = "{0}={1}; expires={2}".format(key, value, dt.toUTCString());
 }
 
-
-
-
-
+// Generate a 128bit UUID
 function create_UUID() {
     var dt = new Date().getTime();
     var uuid = 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function (c) {
@@ -49,70 +142,132 @@ function create_UUID() {
     return uuid;
 }
 
+// Get client's ip at page load
+getUserIP(function (_ip) {
+    ip = _ip;
+});
 
+        // Example schema for token:
+        //
+        // for usage:
+        //      token = {'sid': 1, 'uid': '2ufasdit-0tert'};
+        //      token.sid
+        //      token.uid
+        //
+        // for dumping in cookie:
+        //      token_string = "{'sid': {0}, 'uid': '{1}'}".format(token.sid, token.uid);   equals: token_string = "{'sid': 1, 'uid': '2ufasdit-0tert'}";
+        //      setCookie('token', token_string);
+        //
 
-sessionFactory =
+sessionFactory = {
 
-    {
+    // Checks if a valid session exists. If not, creates one
+    check: function () {
+        var token = getCookie('token');
+        if (token) {
+            active_session = token;
+            console.log("Session is already opened. Token {0}".format(token));
+        } else {
+            sessionFactory.init(user_id);
+        }
+        return true;
+    },
 
-        check: function () {
-            var e = getCookie("sid");
-            return e ? (active_session = e, console.log("Session is already opened. Token {0}".format(e))) : sessionFactory.init(user_id), !0
-        }, init: function () {
-            var t = getCookie("sid");
-            if (t == "") {
-                t = create_UUID();
-                setCookie("uid", t, 10 * 365 * 24 * 60 * 60);
-            }
+    // Creates new session valid during timeout
+    init: function (_user_id) {
+        if (!ip) {
+            setTimeout(function () {
+                if (counter-- == 0) {
+                    counter = ttl;
+                    return;
+                }
+                sessionFactory.init(user_id);
+            }, 1000);
+            return;
         }
 
-    };    
-        
-//         if (ip) {
-//             var flag = 0
-//             var t = getCookie("sid");
-//             var x = getCookie("uid");
-//             if (user_id != e || !t) {
-//
-//                 t = create_UUID();
-//
-//                 var x = getCookie("uid");
-//
-//                 if (x==""){
-//                     x = create_UUID();
-//                     setCookie("uid", x, 10 * 365 * 24 * 60 * 60);
-//                 }
-//
-//                 var x = getCookie("uid");
-//
-//                 user_id = null != e ? e : t, setCookie("sid", t, 30), user_agent = navigator.userAgent, referer = document.location.origin, xReferer = document.location.origin;
-//                 var n = '{"sys_id": "{0}", "user_id": "{1}", "session_id": "{2}", "ip": "{3}","user_agent": "{4}", "referer": "{5}", "xReferer": "{6}"}'.format(system_id, x , t, ip, user_agent, referer, xReferer),
-//                     o = new XMLHttpRequest;
-//                 return o.open("POST", "{0}session/".format(url), !0), o.setRequestHeader("Content-Type", "application/json"), o.setRequestHeader("Authorization", auth_token), o.onreadystatechange = function () {
-//                     4 == this.readyState && 201 == this.status ? console.log("Success: {0}: {1}".format(this.status, this.responseText)) : console.log("Error: {0}: {1}".format(this.status, this.responseText))
-//                 }, o.send(n), !0
-//             }
-//
-//
-//
-//
-//             setCookie("sid", t, 30)
-//         } else setTimeout(function () {
-//             0 != counter-- ? sessionFactory.init(user_id) : counter = ttl
-//         }, 1e3)
-//     },
-//     expire: function () {
-//         return setCookie("sid", null, 1), user_id = null, !0
-//     }
-// }, activityFactory = {
-//     log: function (e, t, n, o, i, r) {
-//         sessionFactory.check();
-//         var a = getCookie("sid");
-//
-//         var s = '{"session_id": "{0}", "channel_id": "{1}", "content_id": "{2}","content_type_id": "{3}", "service_id": "{4}","action_id": "{5}", "time_code": "{6}"}'.format(a, e, t, n, o, i, r);
-//         var   c = new XMLHttpRequest;
-//         return c.open("POST", "{0}event/".format(url), !0), c.setRequestHeader("Content-Type", "application/json"), c.setRequestHeader("Authorization", auth_token), c.onreadystatechange = function () {
-//             4 == this.readyState && 201 == this.status ? (setCookie("sid", a, 30), console.log("Token {0} did activity {1}".format(a, i))) : console.log("Activity logging failed.")
-//         }, c.send(s), !0
-//     }
-// };
+        var token = getCookie('token');
+
+        if (user_id == _user_id && token) { // A valid session exists
+            setCookie('token', token.toString()); // Extend session validation
+            return;
+        }
+        user_id = _user_id != null ? _user_id : create_UUID();
+
+        user_agent = navigator.userAgent;
+        referer = document.location.origin;
+        xReferer = document.location.origin;
+
+        var data = '{"user_id": "{0}", "ip": "{1}","user_agent": "{2}", "referer": "{3}", "xReferer": "{4}"}'.format(
+            user_id, ip, user_agent, referer, xReferer);
+
+        var xmlhttp = new XMLHttpRequest();
+        xmlhttp.open("POST", "{0}session/".format(url), true);
+        xmlhttp.setRequestHeader("Content-Type", "application/json");
+        xmlhttp.setRequestHeader('Authorization', auth_token);
+        xmlhttp.onreadystatechange = function (data) {
+            if (this.readyState == 4 && this.status == 201) {
+                // Setting up Token
+                sid = JSON.parse(this.responseText).id;
+                uid = JSON.parse(this.responseText).id;  // Calculate as your wish
+                token = {'sid': sid, 'uid': uid};
+                token_string = "{'sid': {0}, 'uid': '{1}'}".format(token.sid, token.uid);
+                setCookie('token', token_string);
+                console.log("Success: {0}: {1}".format(this.status, this.responseText));
+            } else {
+                console.log("Error: {0}: {1}".format(this.status, this.responseText));
+            }
+        };
+        xmlhttp.send(data);
+        return true;
+    },
+
+    // Expire cookie and session
+    expire: function () {
+        var token = getCookie('token');
+
+        var xmlhttp = new XMLHttpRequest();
+        xmlhttp.open("PATCH", "{0}session/{1}/".format(url, token), true);
+        xmlhttp.setRequestHeader("Content-Type", "application/json");
+        xmlhttp.setRequestHeader('Authorization', auth_token);
+        xmlhttp.onreadystatechange = function (data) {
+            if (this.readyState == 4 && this.status == 200) {
+                // @todo: must extract session id
+                setCookie('token', null);
+                console.log("Success: {0}: {1}".format(this.status, this.responseText));
+                user_id = null;
+            } else {
+                console.log("Error: {0}: {1}".format(this.status, this.responseText));
+            }
+        };
+        xmlhttp.send();
+        return true;
+    }
+}
+
+activityFactory = {
+    log: function (channel_id, content_id, content_type_id, service_id, action_id, time_code) {
+        sessionFactory.check();
+        var token = getCookie('token');
+
+        var data = '{"session_id": "{0}", "channel_id": "{1}", "content_id": "{2}","content_type_id": "{3}", "service_id": "{4}","action_id": "{5}", "time_code": "{6}"}'.format(
+            token, channel_id, content_id, content_type_id, service_id, action_id, time_code);
+
+        var xmlhttp = new XMLHttpRequest();
+        xmlhttp.open("POST", "{0}event/".format(url), true);
+        xmlhttp.setRequestHeader("Content-Type", "application/json");
+        xmlhttp.setRequestHeader('Authorization', auth_token);
+        xmlhttp.onreadystatechange = function () {
+            if (this.readyState == 4 && this.status == 201) {
+                // Extend session validation
+                setCookie('token', token);
+                console.log("Token {0} did activity {1}".format(token, action_id));
+            } else {
+
+                console.log("Activity logging failed.")
+            }
+        };
+        xmlhttp.send(data);
+        return true;
+    }
+}
