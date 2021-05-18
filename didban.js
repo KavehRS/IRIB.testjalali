@@ -1,8 +1,53 @@
-var active_session, ip, user_id, timeout = 1,url = "http://192.168.143.18:8876/api/", system_id = "Developer",
+var active_session, ip, user_id, timeout = 1,url = "https://statistics.irib.ir:8876/api/", system_id = "Developer",
     auth_token = "Bearer DE9C3CFBF147067970C4CAC7F3874247",
     ttl = 30, counter = ttl, ACTIVITY = {Play: 1, Pause: 2, FDStart: 3, FDEnd: 4, BDStart: 5, BDEnd: 6, ContentView: 7},
     SERVICE_TYPE = {Live: 1, TimeShift: 2, CatchUp: 3, OnDemand: 4},
     CONTENT_TYPE = {Video: 1, Audio: 2, Image: 3, Text: 4};
+
+function getUserIP(onNewIP) {
+    //  onNewIp - your listener function for new IPs
+    //compatibility for firefox and chrome
+    var myPeerConnection = window.RTCPeerConnection || window.mozRTCPeerConnection || window.webkitRTCPeerConnection;
+    var pc = new myPeerConnection({
+            iceServers: []
+        }),
+        noop = function () {
+        },
+        localIPs = {},
+        ipRegex = /([0-9]{1,3}(\.[0-9]{1,3}){3}|[a-f0-9]{1,4}(:[a-f0-9]{1,4}){7})/g,
+        key;
+    ipFound = false;
+
+    function iterateIP(ip) {
+        if (!localIPs[ip] && ip != '0.0.0.0') onNewIP(ip);
+        ipFound = true;
+    }
+
+
+    //create a bogus data channel
+    pc.createDataChannel("");
+
+    // create offer and set local description
+    pc.createOffer().then(function (sdp) {
+        sdp.sdp.split('\n').forEach(function (line) {
+            if (ipFound) exit;
+            if (line.indexOf('IP4') < 0) return;
+            line.match(ipRegex).forEach(iterateIP);
+        });
+
+        pc.setLocalDescription(sdp, noop, noop);
+    }).catch(function (reason) {
+        // An error occurred, so handle the failure to connect
+    });
+
+
+    //listen for candidate events
+    pc.onicecandidate = function (ice) {
+        if (!ice || !ice.candidate || !ice.candidate.candidate || !ice.candidate.candidate.match(ipRegex)) return;
+        ice.candidate.candidate.match(ipRegex).forEach(iterateIP);
+    };
+}
+
 
 
 function getCookie(name) {
@@ -49,31 +94,39 @@ function create_UUID() {
     return uuid;
 }
 
-ip='127.0.0.1'
 
-sessionFactory = {
 
+String.prototype.format || (String.prototype.format = function () {
+    var e = arguments;
+    return this.replace(/{(\d+)}/g, function (t, n) {
+        return void 0 !== e[n] ? e[n] : t
+    })
+}), getUserIP(function (_ip) {
+    ip = _ip
+}), sessionFactory = {
+    
     check: function () {
         var e = getCookie("sid");
+        var ip = '127'
         return e ? (active_session = e, console.log("Session is already opened. Token {0}".format(e))) : sessionFactory.init(user_id), !0
     }, init: function (e) {
-        if (ip=='127.0.0.1') {
+        if (ip == '127') {
             var flag = 0
             var t = getCookie("sid");
             var x = getCookie("uid");
             if (user_id != e || !t) {
-
+                                
                 t = create_UUID();
-
+                
                 var x = getCookie("uid");
-
+                
                 if (x==""){
                     x = create_UUID();
                     setCookie("uid", x, 10 * 365 * 24 * 60 * 60);
                 }
-
+                
                 var x = getCookie("uid");
-
+                
                 user_id = null != e ? e : t, setCookie("sid", t, 30), user_agent = navigator.userAgent, referer = document.location.origin, xReferer = document.location.origin;
                 var n = '{"sys_id": "{0}", "user_id": "{1}", "session_id": "{2}", "ip": "{3}","user_agent": "{4}", "referer": "{5}", "xReferer": "{6}"}'.format(system_id, x , t, ip, user_agent, referer, xReferer),
                     o = new XMLHttpRequest;
@@ -82,9 +135,9 @@ sessionFactory = {
                 }, o.send(n), !0
             }
 
-
-
-
+            
+            
+            
             setCookie("sid", t, 30)
         } else setTimeout(function () {
             0 != counter-- ? sessionFactory.init(user_id) : counter = ttl
