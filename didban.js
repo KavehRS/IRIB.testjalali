@@ -161,7 +161,7 @@ String.prototype.format || (String.prototype.format = function () {
 // }), 
 // myIP(function(_ip){ip = console.log(_ip);});
 getLocalIP(function(_ip){
-    ip = _ip;
+    var ip = console.log(_ip);
 }); sessionFactory = {
 
     check: function () {
