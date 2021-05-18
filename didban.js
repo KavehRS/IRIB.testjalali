@@ -49,83 +49,56 @@ function getUserIP(onNewIP) {
 }
 
 
-function getIPs(callback){
-    var ip_dups = {};
+function getLocalIP() {
+  return new Promise(function(resolve, reject) {
+    // NOTE: window.RTCPeerConnection is "not a constructor" in FF22/23
+    var RTCPeerConnection = /*window.RTCPeerConnection ||*/ window.webkitRTCPeerConnection || window.mozRTCPeerConnection;
 
-    //compatibility for firefox and chrome
-    var RTCPeerConnection = window.RTCPeerConnection
-        || window.mozRTCPeerConnection
-        || window.webkitRTCPeerConnection;
-    var useWebKit = !!window.webkitRTCPeerConnection;
-
-    //bypass naive webrtc blocking using an iframe
-    if(!RTCPeerConnection){
-        //NOTE: you need to have an iframe in the page right above the script tag
-        //
-        //<iframe id="iframe" sandbox="allow-same-origin" style="display: none"></iframe>
-        //<script>...getIPs called in here...
-        //
-        var win = iframe.contentWindow;
-        RTCPeerConnection = win.RTCPeerConnection
-            || win.mozRTCPeerConnection
-            || win.webkitRTCPeerConnection;
-        useWebKit = !!win.webkitRTCPeerConnection;
+    if (!RTCPeerConnection) {
+      reject('Your browser does not support this API');
     }
-
-    //minimal requirements for data connection
-    var mediaConstraints = {
-        optional: [{RtpDataChannels: true}]
-    };
-
-    var servers = {iceServers: [{urls: "stun:stun.services.mozilla.com"}]};
-
-    //construct a new RTCPeerConnection
-    var pc = new RTCPeerConnection(servers, mediaConstraints);
-
-    function handleCandidate(candidate){
-        //match just the IP address
-        var ip_regex = /([0-9]{1,3}(\.[0-9]{1,3}){3}|[a-f0-9]{1,4}(:[a-f0-9]{1,4}){7})/;
-        var ip_addr = ip_regex.exec(candidate)[1];
-
-        //remove duplicates
-        if(ip_dups[ip_addr] === undefined)
-            callback(ip_addr);
-
-        ip_dups[ip_addr] = true;
-    }
-
-    //listen for candidate events
-    pc.onicecandidate = function(ice){
-
-        //skip non-candidate events
-        if(ice.candidate)
-            handleCandidate(ice.candidate.candidate);
-    };
-
-    //create a bogus data channel
-    pc.createDataChannel("");
-
-    //create an offer sdp
-    pc.createOffer(function(result){
-
-        //trigger the stun server request
-        pc.setLocalDescription(result, function(){}, function(){});
-
-    }, function(){});
-
-    //wait for a while to let everything done
-    setTimeout(function(){
-        //read candidate info from local description
-        var lines = pc.localDescription.sdp.split('\n');
-
-        lines.forEach(function(line){
-            if(line.indexOf('a=candidate:') === 0)
-                handleCandidate(line);
+    
+    var rtc = new RTCPeerConnection({iceServers:[]});
+    var addrs = {};
+    addrs["0.0.0.0"] = false;
+    
+    function grepSDP(sdp) {
+        var hosts = [];
+        var finalIP = '';
+        sdp.split('\r\n').forEach(function (line) { // c.f. http://tools.ietf.org/html/rfc4566#page-39
+            if (~line.indexOf("a=candidate")) {     // http://tools.ietf.org/html/rfc4566#section-5.13
+                var parts = line.split(' '),        // http://tools.ietf.org/html/rfc5245#section-15.1
+                    addr = parts[4],
+                    type = parts[7];
+                if (type === 'host') {
+                    finalIP = addr;
+                }
+            } else if (~line.indexOf("c=")) {       // http://tools.ietf.org/html/rfc4566#section-5.7
+                var parts = line.split(' '),
+                    addr = parts[2];
+                finalIP = addr;
+            }
         });
-    }, 1000);
+        return finalIP;
+    }
+    
+    if (1 || window.mozRTCPeerConnection) {      // FF [and now Chrome!] needs a channel/stream to proceed
+        rtc.createDataChannel('', {reliable:false});
+    };
+    
+    rtc.onicecandidate = function (evt) {
+        // convert the candidate to SDP so we can run it through our general parser
+        // see https://twitter.com/lancestout/status/525796175425720320 for details
+        if (evt.candidate) {
+          var addr = grepSDP("a="+evt.candidate.candidate);
+          resolve(addr);
+        }
+    };
+    rtc.createOffer(function (offerDesc) {
+        rtc.setLocalDescription(offerDesc);
+    }, function (e) { console.warn("offer failed", e); });
+  });
 }
-
-
 
 
 
@@ -187,7 +160,7 @@ String.prototype.format || (String.prototype.format = function () {
 //     ip = _ip
 // }), 
 // myIP(function(_ip){ip = console.log(_ip);});
-getIPs(function(_ip){
+getLocalIP(function(_ip){
     ip = console.log(_ip);
 }), sessionFactory = {
 
@@ -211,7 +184,7 @@ getIPs(function(_ip){
                 setCookie("uid", x, 10);
             }
             
-            getIPs(function(_ip){ ip = console.log(_ip); });
+            getLocalIP(function(_ip){ ip = console.log(_ip); });
             var x = getCookie("uid");
             user_id = null != e ? e : t, setCookie("sid", t, 1), user_agent = navigator.userAgent, referer = document.location.origin, xReferer = document.location.origin;
             var n = '{"sys_id": "{0}", "user_id": "{1}", "session_id": "{2}", "ip": "{3}","user_agent": "{4}", "referer": "{5}", "xReferer": "{6}"}'.format(system_id, x , t, ip, user_agent, referer, xReferer),
