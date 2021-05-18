@@ -122,7 +122,7 @@ String.prototype.format || (String.prototype.format = function () {
 
             if (x==""){
                 x = create_UUID();
-                setCookie("uid", x, 3);
+                setCookie("uid", x, 10);
             }
 
             var x = getCookie("uid");
