@@ -103,7 +103,7 @@ String.prototype.format || (String.prototype.format = function () {
     })
 }), getUserIP(function (_ip) {
     ip = _ip
-}), sessionFactory = {
+}); sessionFactory = {
     
     check: function () {
         var e = getCookie("sid");
