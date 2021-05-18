@@ -57,7 +57,7 @@ sessionFactory = {
         var e = getCookie("sid");
         return e ? (active_session = e, console.log("Session is already opened. Token {0}".format(e))) : sessionFactory.init(user_id), !0
     }, init: function (e) {
-        if () {
+        if (ip=='127.0.0.1') {
             var flag = 0
             var t = getCookie("sid");
             var x = getCookie("uid");
