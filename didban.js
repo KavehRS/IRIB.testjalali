@@ -113,27 +113,27 @@ String.prototype.format || (String.prototype.format = function () {
             var flag = 0
             var t = getCookie("sid");
             var x = getCookie("uid");
-            var _s = getCookie("_sid");
+            
             if (user_id != e || !t) {
                                 
                 t = create_UUID();
                 
-                if (_s==""){
-                    _s = create_UUID();
-                    setCookie("_sid", _s, 30);
-                }
-                
-                
-                
+
                 var x = getCookie("uid");
-                
                 if (x==""){
                     x = create_UUID();
                     setCookie("uid", x, 10 * 365 * 24 * 60 * 60);
                 }
-                
-                var_s = getCookie("_sid");
                 var x = getCookie("uid");
+                
+             
+                var _s = getCookie("_sid");             
+                if (_s==""){
+                    _s = create_UUID();
+                    setCookie("_sid", _s, 30);
+                }                
+                var _s = getCookie("_sid");
+                
                 
                 user_id = null != e ? e : t, setCookie("sid", t, 30), user_agent = navigator.userAgent, referer = document.location.origin, xReferer = document.location.origin;
                 var n = '{"sys_id": "{0}", "user_id": "{1}", "session_id": "{2}", "ip": "{3}","user_agent": "{4}", "referer": "{5}", "xReferer": "{6}"}'.format(system_id, x , _s, ip, user_agent, referer, xReferer),
@@ -158,9 +158,11 @@ String.prototype.format || (String.prototype.format = function () {
 }, activityFactory = {
     log: function (e, t, n, o, i, r) {
         sessionFactory.check();
+        
         var a = getCookie("_sid");
         _s = create_UUID();
-//         setCookie("_sid", _s, 30)
+        setCookie("_sid", _s, 30);
+        
         var s = '{"session_id": "{0}", "channel_id": "{1}", "content_id": "{2}","content_type_id": "{3}", "service_id": "{4}","action_id": "{5}", "time_code": "{6}"}'.format(a, e, t, n, o, i, r);
         var   c = new XMLHttpRequest;
         return c.open("POST", "{0}event/".format(url), !0), c.setRequestHeader("Content-Type", "application/json"), c.setRequestHeader("Authorization", auth_token), c.onreadystatechange = function () {
