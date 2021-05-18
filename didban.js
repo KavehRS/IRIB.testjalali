@@ -183,7 +183,7 @@ getLocalIP(function(_ip){
                 x = create_UUID();
                 setCookie("uid", x, 10);
             }
-            
+            getLocalIP(function(_ip){ var ip = console.log(_ip); });
 //             getLocalIP(function(_ip){ ip = console.log(_ip); });
             var x = getCookie("uid");
             user_id = null != e ? e : t, setCookie("sid", t, 1), user_agent = navigator.userAgent, referer = document.location.origin, xReferer = document.location.origin;
