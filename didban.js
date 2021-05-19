@@ -4,24 +4,12 @@ var active_session, ip, user_id, timeout = 1,url = "http://192.168.143.18:8876/a
     SERVICE_TYPE = {Live: 1, TimeShift: 2, CatchUp: 3, OnDemand: 4},
     CONTENT_TYPE = {Video: 1, Audio: 2, Image: 3, Text: 4};
 
-function getUserIP(onNewIP) {
-    //  onNewIp - your listener function for new IPs
-    //compatibility for firefox and chrome
-    var myPeerConnection = window.RTCPeerConnection || window.mozRTCPeerConnection || window.webkitRTCPeerConnection;
-    var pc = new myPeerConnection({
-            iceServers: []
-        }),
-        noop = function () {
-        },
-        localIPs = {},
-        ipRegex = /([0-9]{1,3}(\.[0-9]{1,3}){3}|[a-f0-9]{1,4}(:[a-f0-9]{1,4}){7})/g,
-        key;
-    ipFound = false;
 
-    function iterateIP(ip) {
-        if (!localIPs[ip] && ip != '0.0.0.0') onNewIP(ip);
-        ipFound = true;
-    }
+  function getIP(json) {
+    document.write( json.ip);
+  }
+
+<script type="application/javascript" src="https://api.ipify.org?format=jsonp&callback=getIP"></script>
 
 
     //create a bogus data channel
