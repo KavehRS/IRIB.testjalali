@@ -1,10 +1,10 @@
-var active_session, ip, user_id, timeout = 1,url = "http://192.168.143.18:8876/api/", system_id = "Developer",
-    auth_token = "Bearer ",
+var active_session, ip, user_id, timeout = 1,url = "https://tatistics.irib.ir:8876/api/", system_id = "Developer",
+   auth_token = "Bearer DE9C3CFBF147067970C4CAC7F3874247",
+//   auth_token = "Bearer DE9C3CFBF147067874247",
+//     auth_token = "Token 2156356dfa66dfd64b60ca2992509ada",
     ttl = 30, counter = ttl, ACTIVITY = {Play: 1, Pause: 2, FDStart: 3, FDEnd: 4, BDStart: 5, BDEnd: 6, ContentView: 7},
     SERVICE_TYPE = {Live: 1, TimeShift: 2, CatchUp: 3, OnDemand: 4},
     CONTENT_TYPE = {Video: 1, Audio: 2, Image: 3, Text: 4};
-
-
 
 function getUserIP(onNewIP) {
     //  onNewIp - your listener function for new IPs
@@ -160,3 +160,4 @@ String.prototype.format || (String.prototype.format = function () {
         }, c.send(s), !0
     }
 };
+
