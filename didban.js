@@ -1,4 +1,4 @@
-var active_session, ip, user_id, timeout = 1,url = "https://tatistics.irib.ir:8876/api/", system_id = "Developer",
+var active_session, ip, user_id, timeout = 1,url = "https://statistics.irib.ir:8876/api/", system_id = "Developer",
    auth_token = "Bearer DE9C3CFBF147067970C4CAC7F3874247",
 //   auth_token = "Bearer DE9C3CFBF147067874247",
 //     auth_token = "Token 2156356dfa66dfd64b60ca2992509ada",
