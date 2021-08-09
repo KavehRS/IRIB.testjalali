@@ -117,8 +117,12 @@ String.prototype.format || (String.prototype.format = function () {
         var t = getCookie("sid");
         var x = getCookie("uid");
         if (user_id != e || !t) {
+           
+           if (t==""){
 
-            t = create_UUID();
+
+               t = create_UUID();
+           }
 
             var x = getCookie("uid");
 
@@ -146,7 +150,7 @@ String.prototype.format || (String.prototype.format = function () {
         }, 1e3)}
     },
     expire: function () {
-        return setCookie("sid", null, 0), user_id = null, !0
+        return setCookie("sid", null, 1), user_id = null, !0
     }
 }, activityFactory = {
     log: function (e, t, n, o, i, r) {
