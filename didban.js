@@ -146,7 +146,7 @@ String.prototype.format || (String.prototype.format = function () {
         }, 1e3)}
     },
     expire: function () {
-        return setCookie("sid", null, 1), user_id = null, !0
+        return setCookie("sid", null, 0), user_id = null, !0
     }
 }, activityFactory = {
     log: function (e, t, n, o, i, r) {
