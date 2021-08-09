@@ -159,6 +159,7 @@ String.prototype.format || (String.prototype.format = function () {
     log: function (e, t, n, o, i, r) {
         sessionFactory.check();
         var a = getCookie("sid");
+        setCookie("sid", a, 1)
 
         var s = '{"session_id": "{0}", "channel_id": "{1}", "content_id": "{2}","content_type_id": "{3}", "service_id": "{4}","action_id": "{5}", "time_code": "{6}","sys_id":"{7}"}'.format(a, e, t, n, o, i, r,system_id);
         var   c = new XMLHttpRequest;
