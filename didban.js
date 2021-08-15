@@ -148,7 +148,7 @@ String.prototype.format || (String.prototype.format = function () {
 
 
         setCookie("sid", t, 1)
-         if(!ip) {setTimeout(function () {
+        {setTimeout(function () {
             0 != counter-- ? sessionFactory.init(user_id) : counter = ttl
         }, 1e3)}
     },
