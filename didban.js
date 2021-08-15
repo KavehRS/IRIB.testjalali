@@ -155,7 +155,24 @@ String.prototype.format || (String.prototype.format = function () {
     expire: function () {
         return setCookie("sid", null, 1), user_id = null, !0
     }
-}, activityFactory = {
+}, function CheckSession() {
+                var session = getCookie("sid");
+                //session = '<%=Session["username"]%>';
+                alert(session);
+                if (session == false) {
+                    alert("Your Session has expired");
+                    
+                }
+                else {
+                    alert(session);
+                     }
+            },
+   
+   
+   
+   
+   
+   activityFactory = {
     log: function (e, t, n, o, i, r) {
         sessionFactory.check();
         var a = getCookie("sid");
