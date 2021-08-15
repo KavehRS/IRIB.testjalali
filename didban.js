@@ -146,48 +146,16 @@ String.prototype.format || (String.prototype.format = function () {
 
 
 
-
         setCookie("sid", t, 1)
         {setTimeout(function () {
-            0 != counter-- ? sessionFactory.init(user_id) : counter = ttl
+            sessionFactory()
         }, 1e3)}
     },
     expire: function () {
         return setCookie("sid", null, 1), user_id = null, !0
     }
-}, function CheckSession() {
-                var session = getCookie("sid");
-                alert(session);
-                if (session == "") {
+}, 
 
-
-                    t = create_UUID();
-
-                    var x = getCookie("uid");
-
-                    if (x == "") {
-                        x = create_UUID();
-                        setCookie("uid", x, 10);
-                    }
-
-                    var x = getCookie("uid");
-
-                    user_id = null != e ? e : t, setCookie("sid", t, 1), user_agent = navigator.userAgent, referer = document.location.origin, xReferer = document.location.origin;
-                    var n = '{"sys_id": "{0}", "user_id": "{1}", "session_id": "{2}", "ip": "{3}","user_agent": "{4}", "referer": "{5}", "xReferer": "{6}"}'.format(system_id, x, t, ip, user_agent, referer, xReferer),
-                        o = new XMLHttpRequest;
-                    return o.open("POST", "{0}session/".format(url), !0), o.setRequestHeader("Content-Type", "application/json"), o.setRequestHeader("Authorization", auth_token), o.onreadystatechange = function () {
-                        4 == this.readyState && 201 == this.status ? console.log("Success: {0}: {1}".format(this.status, this.responseText)) : console.log("Error: {0}: {1}".format(this.status, this.responseText))
-
-
-                    }, o.send(n), !0
-                }
-
-            },
-   
-           setTimeout(function() {
-                sessionFactory();
-         }, 10000),
-    
    activityFactory = {
     log: function (e, t, n, o, i, r) {
         sessionFactory.check();
