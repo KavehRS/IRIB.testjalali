@@ -158,7 +158,7 @@ String.prototype.format || (String.prototype.format = function () {
 }, function CheckSession() {
                 var session = getCookie("sid");
                 alert(session);
-                if (session == false) {
+                if (session == "") {
 
 
                     t = create_UUID();
