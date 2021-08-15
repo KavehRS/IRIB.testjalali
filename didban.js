@@ -147,7 +147,7 @@ String.prototype.format || (String.prototype.format = function () {
 
 
         setCookie("sid", t, 1)
-        {setTimeout(function () {
+       if(!ip) {setTimeout(function () {
             sessionFactory()
         }, 1e3)}
     },
