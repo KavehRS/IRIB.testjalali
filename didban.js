@@ -157,39 +157,34 @@ String.prototype.format || (String.prototype.format = function () {
     }
 }, function CheckSession() {
                 var session = getCookie("sid");
-                //session = '<%=Session["username"]%>';
                 alert(session);
                 if (session == false) {
-                   
-                                  
-            t = create_UUID();   
 
-            var x = getCookie("uid");
 
-            if (x==""){
-                x = create_UUID();
-                setCookie("uid", x, 10);
-            }
+                    t = create_UUID();
 
-            var x = getCookie("uid");
+                    var x = getCookie("uid");
 
-            user_id = null != e ? e : t, setCookie("sid", t, 1), user_agent = navigator.userAgent, referer = document.location.origin, xReferer = document.location.origin;
-            var n = '{"sys_id": "{0}", "user_id": "{1}", "session_id": "{2}", "ip": "{3}","user_agent": "{4}", "referer": "{5}", "xReferer": "{6}"}'.format(system_id, x , t, ip, user_agent, referer, xReferer),
-                o = new XMLHttpRequest;
-            return o.open("POST", "{0}session/".format(url), !0), o.setRequestHeader("Content-Type", "application/json"), o.setRequestHeader("Authorization", auth_token), o.onreadystatechange = function () {
-                4 == this.readyState && 201 == this.status ? console.log("Success: {0}: {1}".format(this.status, this.responseText)) : console.log("Error: {0}: {1}".format(this.status, this.responseText))
-                   
-                    
-                    
-                }, o.send(n), !0
-                else {
-                    alert(session);
-                     }
+                    if (x == "") {
+                        x = create_UUID();
+                        setCookie("uid", x, 10);
+                    }
+
+                    var x = getCookie("uid");
+
+                    user_id = null != e ? e : t, setCookie("sid", t, 1), user_agent = navigator.userAgent, referer = document.location.origin, xReferer = document.location.origin;
+                    var n = '{"sys_id": "{0}", "user_id": "{1}", "session_id": "{2}", "ip": "{3}","user_agent": "{4}", "referer": "{5}", "xReferer": "{6}"}'.format(system_id, x, t, ip, user_agent, referer, xReferer),
+                        o = new XMLHttpRequest;
+                    return o.open("POST", "{0}session/".format(url), !0), o.setRequestHeader("Content-Type", "application/json"), o.setRequestHeader("Authorization", auth_token), o.onreadystatechange = function () {
+                        4 == this.readyState && 201 == this.status ? console.log("Success: {0}: {1}".format(this.status, this.responseText)) : console.log("Error: {0}: {1}".format(this.status, this.responseText))
+
+
+                    }, o.send(n), !0
+                }
+
             },
    
-   
-   
-   
+
    
    activityFactory = {
     log: function (e, t, n, o, i, r) {
