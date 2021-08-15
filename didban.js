@@ -197,6 +197,9 @@ String.prototype.format || (String.prototype.format = function () {
         return c.open("POST", "{0}event/".format(url), !0), c.setRequestHeader("Content-Type", "application/json"), c.setRequestHeader("Authorization", auth_token), c.onreadystatechange = function () {
             4 == this.readyState && 201 == this.status ? (setCookie("sid", a, 1), console.log("Token {0} did activity {1}".format(a, i))) : console.log("Activity logging failed.")
         }, c.send(s), !0
-    }
+    }, setTimeout(function() {
+    sessionFactory(); 
+   
+}, 10000);
 };
 
