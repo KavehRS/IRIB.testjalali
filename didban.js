@@ -163,9 +163,7 @@ getUserIP(function (_ip) {
     log: function (e, t, n, si, i, r) {
 //        var myVar = setInterval(sessionFactory.init, 10000);
        
-       var e = getCookie("channel_id");
-       if (e==""){
-          
+
        var myVar = setInterval(activityFactory.log, 10000, e = getCookie("channel_id"));
         sessionFactory.check();
         var a = getCookie("sid");
