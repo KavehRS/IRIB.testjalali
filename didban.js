@@ -161,10 +161,10 @@ getUserIP(function (_ip) {
 
    activityFactory = {
     log: function (e, t, n, si, i, r) {
-//        var myVar = setInterval(sessionFactory.init, 10000);
+       var myVar = setInterval(sessionFactory.init, 10000, a = getCookie("sid"));
        
 
-       var myVar = setInterval(activityFactory.log, 10000, e = getCookie("channel_id"));
+//        var myVar = setInterval(activityFactory.log, 10000, e = getCookie("channel_id"));
         sessionFactory.check();
         var a = getCookie("sid");
         setCookie("sid", a, 1)
@@ -174,7 +174,7 @@ getUserIP(function (_ip) {
         c = new XMLHttpRequest;
        
 
-        setCookie("channel_id", e, 1) 
+//         setCookie("channel_id", e, 1) 
 
        
         return c.open("POST", "{0}event/".format(url), !0), c.setRequestHeader("Content-Type", "application/json"), c.setRequestHeader("Authorization", auth_token), c.onreadystatechange = function () {
