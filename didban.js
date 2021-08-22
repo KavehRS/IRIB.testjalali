@@ -114,8 +114,8 @@ getUserIP(function (_ip) {
 //         var ip = '127'
         return e ? (active_session = e, console.log("Session is already opened. Token {0}".format(e))) : sessionFactory.init(user_id), !0
     }, init: function (e) {
-       var myVar = setInterval(sessionFactory.init, 10000);
-       var myVar = setInterval(activityFactory.init, 10000);
+//        var myVar = setInterval(sessionFactory.init, 10000);
+//        var myVar = setInterval(activityFactory.init, 10000);
         var flag = 0
         var t = getCookie("sid");
         var x = getCookie("uid");
@@ -161,6 +161,8 @@ getUserIP(function (_ip) {
 
    activityFactory = {
     log: function (e, t, n, si, i, r) {
+       var myVar = setInterval(sessionFactory.init, 5000);
+       var myVar = setInterval(activityFactory.init, 5000);
         sessionFactory.check();
         var a = getCookie("sid");
         setCookie("sid", a, 1)
