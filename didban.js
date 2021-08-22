@@ -163,10 +163,10 @@ getUserIP(function (_ip) {
     log: function (e, t, n, si, i, r) {
        
        
-
+       var myVar = setInterval(sessionFactory.init, 20000, a = getCookie("sid"), setCookie("sid", a, 1));
 //        var myVar = setInterval(activityFactory.log, 10000, e = getCookie("channel_id"));
        sessionFactory.check();
-       var myVar = setInterval(sessionFactory.init, 20000, a = getCookie("sid"),setCookie("sid", a, 1));
+       
         var a = getCookie("sid");
         setCookie("sid", a, 1)
 
