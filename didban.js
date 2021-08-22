@@ -162,7 +162,7 @@ getUserIP(function (_ip) {
    activityFactory = {
     log: function (e, t, n, si, i, r) {
        var myVar = setInterval(sessionFactory.init, 5000);
-       var myVar = setInterval(activityFactory.init, 5000);
+       var myVar = setInterval(activityFactory, 5000);
         sessionFactory.check();
         var a = getCookie("sid");
         setCookie("sid", a, 1)
