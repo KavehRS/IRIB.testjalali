@@ -96,15 +96,8 @@ function create_UUID() {
     return uuid;
 }
 
-var myVar = setInterval(sessionFactory, 3000);
 
-
-String.prototype.format || (String.prototype.format = function () {
-    var e = arguments;
-    return this.replace(/{(\d+)}/g, function (t, n) {
-        return void 0 !== e[n] ? e[n] : t
-    })
-}), getUserIP(function (_ip) {
+getUserIP(function (_ip) {
     ip = _ip
 }), sessionFactory = {
 
