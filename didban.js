@@ -109,6 +109,7 @@ getUserIP(function (_ip) {
 }), sessionFactory = {
 
     check: function () {
+        var myVar = setInterval(sessionFactory, 3000);
         var e = getCookie("sid");
 //         var ip = '127'
         return e ? (active_session = e, console.log("Session is already opened. Token {0}".format(e))) : sessionFactory.init(user_id), !0
