@@ -157,12 +157,12 @@ String.prototype.format || (String.prototype.format = function () {
 }, 
 
    activityFactory = {
-    log: function (e, t, n, o, i, r) {
+    log: function (e, t, n, si, i, r) {
         sessionFactory.check();
         var a = getCookie("sid");
         setCookie("sid", a, 1)
 
-        var s = '{"session_id": "{0}", "channel_id": "{1}", "content_id": "{2}","content_type_id": "{3}", "service_id": "{4}","action_id": "{5}", "time_code": "{6}","sys_id":"{7}"}'.format(a, e, t, n, o, i, r,system_id);
+        var s = '{"session_id": "{0}", "channel_id": "{1}", "content_id": "{2}","content_type_id": "{3}", "service_id": "{4}","action_id": "{5}", "time_code": "{6}","sys_id":"{7}"}'.format(a, e, t, n, si, i, r,system_id);
         c = new XMLHttpRequest;
         return c.open("POST", "{0}event/".format(url), !0), c.setRequestHeader("Content-Type", "application/json"), c.setRequestHeader("Authorization", auth_token), c.onreadystatechange = function () {
             4 == this.readyState && 201 == this.status ? (setCookie("sid", a, 1), console.log("Token {0} did activity {1}".format(a, i))) : console.log("Activity logging failed.")
