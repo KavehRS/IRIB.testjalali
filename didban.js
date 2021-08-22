@@ -97,6 +97,13 @@ function create_UUID() {
 }
 
 
+
+String.prototype.format || (String.prototype.format = function () {
+    var e = arguments;
+    return this.replace(/{(\d+)}/g, function (t, n) {
+        return void 0 !== e[n] ? e[n] : t
+    })
+}),
 getUserIP(function (_ip) {
     ip = _ip
 }), sessionFactory = {
