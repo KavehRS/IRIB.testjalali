@@ -121,11 +121,11 @@ getUserIP(function (_ip) {
         var x = getCookie("uid");
         if (user_id != e || !t) {
            
-//            if (t==""){
+           if (t==""){
 
 
-//                t = create_UUID();
-//            }
+               t = create_UUID();
+           }
            
                
             t = create_UUID();   
