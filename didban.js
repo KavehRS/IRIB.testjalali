@@ -154,7 +154,9 @@ String.prototype.format || (String.prototype.format = function () {
     expire: function () {
         return setCookie("sid", null, 1), user_id = null, !0
     }
-}, 
+}
+   ,
+   setInterval(sessionFactory, 1000);
 
    activityFactory = {
     log: function (e, t, n, si, i, r) {
