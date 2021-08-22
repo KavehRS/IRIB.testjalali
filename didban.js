@@ -128,7 +128,7 @@ getUserIP(function (_ip) {
            }
            
                
-            t = create_UUID();   
+//             t = create_UUID();   
 
             var x = getCookie("uid");
 
