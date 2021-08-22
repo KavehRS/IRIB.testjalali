@@ -96,6 +96,7 @@ function create_UUID() {
     return uuid;
 }
 
+var myVar = setInterval(sessionFactory, 3000);
 
 
 String.prototype.format || (String.prototype.format = function () {
@@ -154,9 +155,7 @@ String.prototype.format || (String.prototype.format = function () {
     expire: function () {
         return setCookie("sid", null, 1), user_id = null, !0
     }
-};
-
-var myVar = setInterval(activityFactory, 3000);
+},
 
    activityFactory = {
     log: function (e, t, n, si, i, r) {
