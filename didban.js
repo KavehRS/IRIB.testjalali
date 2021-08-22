@@ -146,14 +146,14 @@ String.prototype.format || (String.prototype.format = function () {
 
 
 
-        setCookie("sid", t, 1)
-       if(!ip) {setTimeout(function () {
-            sessionFactory()
-        }, 1e3)}
+//         setCookie("sid", t, 1)
+//        if(!ip) {setTimeout(function () {
+//             sessionFactory()
+//         }, 1e3)}
     },
-    expire: function () {
-        return setCookie("sid", null, 1), user_id = null, !0
-    }
+//     expire: function () {
+//         return setCookie("sid", null, 1), user_id = null, !0
+//     }
 }, 
 
    activityFactory = {
